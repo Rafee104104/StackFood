@@ -17,8 +17,8 @@ class LoginController extends Controller
     }
 
     public function login()
-    { 
-        
+    {
+
         $custome_recaptcha = new CaptchaBuilder;
         $custome_recaptcha->build();
         Session::put('six_captcha', $custome_recaptcha->getPhrase());
@@ -26,8 +26,8 @@ class LoginController extends Controller
     }
 
     public function submit(Request $request)
-    { 
-        
+    {
+
 
         $request->validate([
             'email' => 'required|email',
@@ -39,7 +39,7 @@ class LoginController extends Controller
             $request->validate([
                 'g-recaptcha-response' => [
                     function ($attribute, $value, $fail) {
-                        $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
+                        $secret_key = env('SECRET_KEY');
                         $response = $value;
                         $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $response;
                         $response = \file_get_contents($url);
@@ -50,8 +50,7 @@ class LoginController extends Controller
                     },
                 ],
             ]);
-        } else if(strtolower(session('six_captcha')) != strtolower($request->custome_recaptcha))
-        {
+        } else if (strtolower(session('six_captcha')) != strtolower($request->custome_recaptcha)) {
             Toastr::error(translate('messages.ReCAPTCHA Failed'));
             return back();
         }

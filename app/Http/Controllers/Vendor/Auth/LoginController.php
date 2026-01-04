@@ -38,7 +38,7 @@ class LoginController extends Controller
             $request->validate([
                 'g-recaptcha-response' => [
                     function ($attribute, $value, $fail) {
-                        $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
+                        $secret_key = env('SECRET_KEY');
                         $response = $value;
                         $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $response;
                         $response = \file_get_contents($url);
@@ -49,21 +49,18 @@ class LoginController extends Controller
                     },
                 ],
             ]);
-        } else if(strtolower(session('six_captcha')) != strtolower($request->custome_recaptcha))
-        {
+        } else if (strtolower(session('six_captcha')) != strtolower($request->custome_recaptcha)) {
             Toastr::error(translate('messages.ReCAPTCHA Failed'));
             return back();
         }
 
         $vendor = Vendor::where('email', $request->email)->first();
-        if($vendor)
-        {
-            if($vendor->stores[0]->status == 0)
-            {
+        if ($vendor) {
+            if ($vendor->stores[0]->status == 0) {
                 return redirect()->back()->withInput($request->only('email', 'remember'))
-            ->withErrors([translate('messages.inactive_vendor_warning')]);
+                    ->withErrors([translate('messages.inactive_vendor_warning')]);
             }
-            
+
             if (auth('vendor')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
                 return redirect()->route('vendor.dashboard');
             }
