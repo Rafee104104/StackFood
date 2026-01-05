@@ -100,7 +100,7 @@
                                             aria-label="{{translate('messages.password_length_placeholder', ['length' => '6+'])}}"
                                             required data-msg="{{translate('messages.invalid_password_warning')}}"
                                             data-hs-toggle-password-options='{
-                                                     "target": "#changePassTarget",
+                                            "target": "#changePassTarget",
                                             "defaultClass": "tio-hidden-outlined",
                                             "showClass": "tio-visible-outlined",
                                             "classChangeTarget": "#changePassIcon"
@@ -182,7 +182,31 @@
     <!-- JS Front -->
     <script src="{{asset('assets/admin/js/theme.min.js')}}"></script>
     <script src="{{asset('assets/admin/js/toastr.js')}}"></script>
-    {!! Toastr::message() !!}
+    <script>
+        @if(Session::has('toastr::messages'))
+            var toastrMessages = {!! json_encode(Session::get('toastr::messages')) !!};
+            
+            toastrMessages.forEach(function(message) {
+                toastr.options = message.options || {};
+                var title = message.title ? message.title : '';
+                
+                switch(message.type) {
+                    case 'info':
+                        toastr.info(message.message, title);
+                        break;
+                    case 'success':
+                        toastr.success(message.message, title);
+                        break;
+                    case 'warning':
+                        toastr.warning(message.message, title);
+                        break;
+                    case 'error':
+                        toastr.error(message.message, title);
+                        break;
+                }
+            });
+        @endif
+    </script>
 
     @if ($errors->any())
         <script>

@@ -1,0 +1,22 @@
+[33mMigrating:[39m 2022_04_12_015827_create_social_media_table
+
+  [41;1m Illuminate\Database\QueryException [49;22m
+
+[39;1m  SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'social_media' already exists (SQL: create table `social_media` (`id` bigint unsigned not null auto_increment primary key, `name` varchar(255) not null, `link` varchar(255) not null, `status` tinyint(1) not null default '1', `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci')[39;22m
+
+  at [32mC:\xampp\htdocs\StackFood\vendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m712[39m
+    708▕         // If an exception occurs when attempting to run a query, we'll format the error
+    709▕         // message to include the bindings with SQL, which will make this exception a
+    710▕         // lot more helpful to the developer instead of just the database's errors.
+    711▕         catch (Exception $e) {
+  ➜ 712▕             throw new QueryException(
+    713▕                 $query, $this->prepareBindings($bindings), $e
+    714▕             );
+    715▕         }
+    716▕     }
+
+  [33m1   [39m[39;1mC:\xampp\htdocs\StackFood\vendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m501[39;22m
+  [37m    PDOException::("SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'social_media' already exists")[39m
+
+  [33m2   [39m[39;1mC:\xampp\htdocs\StackFood\vendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m501[39;22m
+  [37m    PDOStatement::execute()[39m

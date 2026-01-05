@@ -1,0 +1,22 @@
+[33mMigrating:[39m 2026_01_05_000000_add_missing_cols_to_stores_table
+
+  [41;1m Illuminate\Database\QueryException [49;22m
+
+[39;1m  SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'latitude' (SQL: alter table `stores` add `logo` varchar(255) null, add `cover_photo` varchar(255) null, add `latitude` varchar(255) null, add `longitude` varchar(255) null, add `vendor_id` bigint unsigned null, add `zone_id` bigint unsigned null, add `module_id` bigint unsigned null, add `tax` decimal(8, 2) not null default '0', add `delivery_time` varchar(255) null)[39;22m
+
+  at [32mC:\xampp\htdocs\StackFood\vendor\laravel\framework\src\Illuminate\Database\Connection.php[39m:[32m712[39m
+    708▕         // If an exception occurs when attempting to run a query, we'll format the error
+    709▕         // message to include the bindings with SQL, which will make this exception a
+    710▕         // lot more helpful to the developer instead of just the database's errors.
+    711▕         catch (Exception $e) {
+  ➜ 712▕             throw new QueryException(
+    713▕                 $query, $this->prepareBindings($bindings), $e
+    714▕             );
+    715▕         }
+    716▕     }
+
+  [33m1   [39m[39;1mC:\xampp\htdocs\StackFood\vendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m501[39;22m
+  [37m    PDOException::("SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'latitude'")[39m
+
+  [33m2   [39m[39;1mC:\xampp\htdocs\StackFood\vendor\laravel\framework\src\Illuminate\Database\Connection.php[39;22m:[39;1m501[39;22m
+  [37m    PDOStatement::execute()[39m
