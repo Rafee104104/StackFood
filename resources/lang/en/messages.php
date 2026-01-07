@@ -1308,5 +1308,6 @@
   'Edit item' => 'Edit item',
   'table_unchecked_warning' => 'Uncheck ":table" first',
   'Paid by' => 'Paid by',
-  'password_mismatch'=>'Password did,t match!',
+  'password_mismatch' => 'Password did,t match!',
+  'Enter order verification code' => 'Enter order verification code',
 );
