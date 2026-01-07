@@ -1,8 +1,8 @@
-@php($params=session('dash_params'))
-@if($params['zone_id']!='all')
-    @php($zone_name=\App\Models\Zone::where('id',$params['zone_id'])->first()->name)
+@php($params = session('dash_params'))
+@if($params['zone_id'] != 'all')
+@php($zone_name = \App\Models\Zone::where('id', $params['zone_id'])->first()->name)
 @else
-    @php($zone_name='All')
+@php($zone_name = 'All')
 @endif
 <label class="badge badge-soft-info">( Zone : {{$zone_name}} )</label>
 
@@ -12,36 +12,35 @@
 </div>
 
 
-<script src="{{asset('public/assets/admin')}}/vendor/chart.js/dist/Chart.min.js"></script>
-
-
-<script>
-    var ctx = document.getElementById('user-overview');
-    var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: [
-                'Customer',
-                'store',
-                'Delivery Man'
-            ],
-            datasets: [{
-                label: 'User',
-                data: ['{{$data['customer']}}', '{{$data['stores']}}', '{{$data['delivery_man']}}'],
-                backgroundColor: [
-                    '#628395',
-                    '#055052',
-                    '#53B8BB'
+@push('script_2')
+    <script>
+        var ctx = document.getElementById('user-overview');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'Customer',
+                    'store',
+                    'Delivery Man'
                 ],
-                hoverOffset: 4
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+                datasets: [{
+                    label: 'User',
+                    data: ['{{$data['customer']}}', '{{$data['stores']}}', '{{$data['delivery_man']}}'],
+                    backgroundColor: [
+                        '#628395',
+                        '#055052',
+                        '#53B8BB'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
-</script>
+        });
+    </script>
+@endpush
