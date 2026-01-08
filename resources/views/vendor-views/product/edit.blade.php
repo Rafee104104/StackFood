@@ -261,7 +261,7 @@
 
                         <center style="display: block" id="image-viewer-section" class="pt-2">
                             <img style="height: 200px;border: 1px solid; border-radius: 10px;" id="viewer"
-                                 src="{{asset('storage/app/public/product')}}/{{$product['image']}}"
+                                 src="{{asset('storage/product')}}/{{$product['image']}}"
                                  alt="product image"/>
                         </center>
                     </div>
@@ -276,7 +276,7 @@
                                             <div class="card-body">
                                                 <img style="width: 100%" height="auto"
                                                         onerror="this.src='{{asset('assets/front-end/img/image-place-holder.png')}}'"
-                                                        src="{{asset("storage/app/public/product/$photo")}}"
+                                                        src="{{asset("storage/product/$photo")}}"
                                                         alt="Product image">
                                                 <a href="{{route('vendor.item.remove-image',['id'=>$product['id'],'name'=>$photo])}}"
                                                     class="btn btn-danger btn-block">{{translate('messages.remove')}}</a>

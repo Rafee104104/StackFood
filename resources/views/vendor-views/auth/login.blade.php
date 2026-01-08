@@ -32,7 +32,7 @@
         <div class="container py-5 py-sm-7">
             <a class="d-flex justify-content-center mb-5" href="javascript:">
                 <img class="z-index-2" onerror="this.src='{{asset('assets/admin/img/160x160/img2.jpg')}}'"
-                    src="{{asset('storage/app/public/business/' . $systemlogo)}}" alt="Image Description"
+                    src="{{asset('storage/business/' . $systemlogo)}}" alt="Image Description"
                     style="max-height: 100px;max-width: 300px">
             </a>
 

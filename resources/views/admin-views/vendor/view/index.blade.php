@@ -147,7 +147,7 @@
                     <div class="d-flex align-items-center">
                         <img class="avatar avatar-xxl avatar-4by3 mr-4"
                         onerror="this.src='{{asset('assets/admin/img/160x160/img1.jpg')}}'"
-                        src="{{asset('storage/app/public/store')}}/{{$store->logo}}"
+                        src="{{asset('storage/store')}}/{{$store->logo}}"
                                 alt="{{$store->name}} Logo">
                         
                     </div>
@@ -284,7 +284,7 @@
                             <div class="text-center">
                                 <div class="avatar avatar-xxl avatar-circle avatar-border-lg">
                                     <img class="avatar-img" onerror="this.src='{{asset('assets/admin/img/160x160/img1.jpg')}}'"
-                                src="{{asset('storage/app/public/vendor')}}/{{$store->vendor->image}}" alt="Image Description">
+                                src="{{asset('storage/vendor')}}/{{$store->vendor->image}}" alt="Image Description">
                                 </div>
                             
                             

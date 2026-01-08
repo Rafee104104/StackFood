@@ -117,7 +117,7 @@
                     <td>
                         <div style="text-align: right; margin-right:15px;">
                             <img style="max-width:250px;border:0;"
-                                src="{{ asset('/storage/app/public/business/' . $logo) }}" title=""
+                                src="{{ asset('/storage/business/' . $logo) }}" title=""
                                 class="sitelogo" width="60%" alt="Image" />
                         </div>
                     </td>
@@ -136,7 +136,7 @@
                                 @if ($order->store)
                                     <div style="display:flex; align-items:center;margin-top:10px;">
                                         <img style="border:0;border-radius:50%;"
-                                            src="{{ asset('/storage/app/public/store/' . $order->store->logo) }}" title="Logo"
+                                            src="{{ asset('/storage/store/' . $order->store->logo) }}" title="Logo"
                                             class="sitelogo" width="20%" alt="Image" />
                                         <span style="padding-left: 5px;">{{ $order->store->name }}</span>
                                     </div>

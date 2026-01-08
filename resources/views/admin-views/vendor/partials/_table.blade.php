@@ -6,7 +6,7 @@
             <a href="{{route('admin.vendor.view', $store->id)}}" alt="view store">
             <img width="60" style="border-radius: 50%; height:100%;"
                     onerror="this.src='{{asset('assets/admin/img/160x160/img1.jpg')}}'"
-                    src="{{asset('storage/app/public/store')}}/{{$store['logo']}}"></a>
+                    src="{{asset('storage/store')}}/{{$store['logo']}}"></a>
         </div>
     </td>
     <td>
