@@ -56,7 +56,8 @@ class LoginController extends Controller
 
         $vendor = Vendor::where('email', $request->email)->first();
         if ($vendor) {
-            if (isset($vendor->stores[0]) && $vendor->stores[0]->status == 0) {
+            $store = $vendor->stores->first();
+            if ($store && $store->status == 0) {
                 return redirect()->back()->withInput($request->only('email', 'remember'))
                     ->withErrors([translate('messages.inactive_vendor_warning')]);
             }

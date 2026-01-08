@@ -90,7 +90,9 @@ Route::get('payment-success', [PaymentController::class, 'success'])->name('paym
 Route::get('payment-fail', [PaymentController::class, 'fail'])->name('payment-fail');
 
 // ================= SENANG PAY =================
-Route::match(['get', 'post'], 'return-senang-pay',
+Route::match(
+    ['get', 'post'],
+    'return-senang-pay',
     [SenangPayController::class, 'return_senang_pay']
 )->name('return-senang-pay');
 
@@ -155,3 +157,6 @@ Route::prefix('deliveryman')->name('deliveryman.')->group(function () {
 });
 
 
+Route::group(['prefix'=> 'admin'], function () {
+    require base_path('routes/admin.php');
+}); 

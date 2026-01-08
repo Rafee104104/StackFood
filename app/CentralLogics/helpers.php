@@ -30,7 +30,7 @@ class Helpers
 
     public static function schedule_order()
     {
-        return (bool)BusinessSetting::where(['key' => 'schedule_order'])->first()->value;
+        return (bool) BusinessSetting::where(['key' => 'schedule_order'])->first()->value;
     }
 
 
@@ -90,7 +90,7 @@ class Helpers
                 }
                 $categories = [];
                 foreach (json_decode($item['category_ids']) as $value) {
-                    $categories[] = ['id' => (string)$value->id, 'position' => $value->position];
+                    $categories[] = ['id' => (string) $value->id, 'position' => $value->position];
                 }
                 $item['category_ids'] = $categories;
                 $item['attributes'] = json_decode($item['attributes']);
@@ -99,8 +99,8 @@ class Helpers
                 foreach (json_decode($item['variations'], true) as $var) {
                     array_push($variations, [
                         'type' => $var['type'],
-                        'price' => (float)$var['price'],
-                        'stock' => (int)($var['stock'] ?? 0)
+                        'price' => (float) $var['price'],
+                        'stock' => (int) ($var['stock'] ?? 0)
                     ]);
                 }
                 $item['variations'] = $variations;
@@ -108,8 +108,8 @@ class Helpers
                 $item['store_discount'] = self::get_store_discount($item->store) ? $item->store->discount->discount : 0;
                 $item['schedule_order'] = $item->store->schedule_order;
                 $item['tax'] = $item->store->tax;
-                $item['rating_count'] = (int)($item->rating ? array_sum(json_decode($item->rating, true)) : 0);
-                $item['avg_rating'] = (float)($item->avg_rating ? $item->avg_rating : 0);
+                $item['rating_count'] = (int) ($item->rating ? array_sum(json_decode($item->rating, true)) : 0);
+                $item['avg_rating'] = (float) ($item->avg_rating ? $item->avg_rating : 0);
 
                 if ($trans) {
                     $item['translations'][] = [
@@ -159,7 +159,7 @@ class Helpers
             $variations = [];
             $categories = [];
             foreach (json_decode($data['category_ids']) as $value) {
-                $categories[] = ['id' => (string)$value->id, 'position' => $value->position];
+                $categories[] = ['id' => (string) $value->id, 'position' => $value->position];
             }
             $data['category_ids'] = $categories;
 
@@ -169,8 +169,8 @@ class Helpers
             foreach (json_decode($data['variations'], true) as $var) {
                 array_push($variations, [
                     'type' => $var['type'],
-                    'price' => (float)$var['price'],
-                    'stock' => (int)($var['stock'] ?? 0)
+                    'price' => (float) $var['price'],
+                    'stock' => (int) ($var['stock'] ?? 0)
                 ]);
             }
             if ($data->title) {
@@ -197,8 +197,8 @@ class Helpers
             $data['store_name'] = $data->store->name;
             $data['store_discount'] = self::get_store_discount($data->store) ? $data->store->discount->discount : 0;
             $data['schedule_order'] = $data->store->schedule_order;
-            $data['rating_count'] = (int)($data->rating ? array_sum(json_decode($data->rating, true)) : 0);
-            $data['avg_rating'] = (float)($data->avg_rating ? $data->avg_rating : 0);
+            $data['rating_count'] = (int) ($data->rating ? array_sum(json_decode($data->rating, true)) : 0);
+            $data['avg_rating'] = (float) ($data->avg_rating ? $data->avg_rating : 0);
 
             if ($trans) {
                 $data['translations'][] = [
@@ -479,7 +479,7 @@ class Helpers
                 }
 
                 $item['delivery_address'] = $item->delivery_address ? json_decode($item->delivery_address, true) : null;
-                $item['details_count'] = (int)$item->details->count();
+                $item['details_count'] = (int) $item->details->count();
                 unset($item['details']);
                 array_push($storage, $item);
             }
@@ -509,7 +509,7 @@ class Helpers
                 }
             }
             $data['delivery_address'] = $data->delivery_address ? json_decode($data->delivery_address, true) : null;
-            $data['details_count'] = (int)$data->details->count();
+            $data['details_count'] = (int) $data->details->count();
             unset($data['details']);
         }
         return $data;
@@ -551,8 +551,8 @@ class Helpers
     {
         $storage = [];
         foreach ($data as $item) {
-            $item['avg_rating'] = (float)(count($item->rating) ? (float)$item->rating[0]->average : 0);
-            $item['rating_count'] = (int)(count($item->rating) ? $item->rating[0]->rating_count : 0);
+            $item['avg_rating'] = (float) (count($item->rating) ? (float) $item->rating[0]->average : 0);
+            $item['rating_count'] = (int) (count($item->rating) ? $item->rating[0]->rating_count : 0);
             $item['lat'] = $item->last_location ? $item->last_location->latitude : null;
             $item['lng'] = $item->last_location ? $item->last_location->longitude : null;
             $item['location'] = $item->last_location ? $item->last_location->location : null;
@@ -1043,7 +1043,7 @@ class Helpers
                 }
             }
 
-            if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'confirmed'  && ($order->payment_method != 'cash_on_delivery' || config('order_confirmation_model') == 'store')) {
+            if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'confirmed' && ($order->payment_method != 'cash_on_delivery' || config('order_confirmation_model') == 'store')) {
                 $data = [
                     'title' => translate('messages.order_push_title'),
                     'description' => translate('messages.new_order_push_description'),
@@ -1075,7 +1075,7 @@ class Helpers
             }
             try {
                 if ($order->order_status == 'confirmed' && $order->payment_method != 'cash_on_delivery' && config('mail.status')) {
-                        Mail::to($order->customer->email)->send(new PlaceOrder($order->id));
+                    Mail::to($order->customer->email)->send(new PlaceOrder($order->id));
                 }
             } catch (\Exception $ex) {
                 info($ex);
@@ -1132,14 +1132,16 @@ class Helpers
         }
     }
 
-    public static  function remove_dir($dir)
+    public static function remove_dir($dir)
     {
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (filetype($dir . "/" . $object) == "dir") Helpers::remove_dir($dir . "/" . $object);
-                    else unlink($dir . "/" . $object);
+                    if (filetype($dir . "/" . $object) == "dir")
+                        Helpers::remove_dir($dir . "/" . $object);
+                    else
+                        unlink($dir . "/" . $object);
                 }
             }
             reset($objects);
@@ -1152,7 +1154,7 @@ class Helpers
         if (auth('vendor_employee')->check()) {
             return auth('vendor_employee')->user()->store->id;
         }
-        return auth('vendor')->user()->stores[0]->id;
+        return auth('vendor')->user()->stores->first()->id ?? 0;
     }
 
     public static function get_vendor_id()
@@ -1190,7 +1192,7 @@ class Helpers
         if (auth('vendor_employee')->check()) {
             return auth('vendor_employee')->user()->store;
         }
-        return auth('vendor')->user()->stores[0];
+        return auth('vendor')->user()->stores->first();
     }
 
     public static function upload(string $dir, string $format, $image = null)
@@ -1224,7 +1226,7 @@ class Helpers
     {
         $data = [];
         foreach ($coordinates as $coord) {
-            $data[] = (object)['lat' => $coord->getlat(), 'lng' => $coord->getlng()];
+            $data[] = (object) ['lat' => $coord->getlat(), 'lng' => $coord->getlng()];
         }
         return $data;
     }
@@ -1240,7 +1242,7 @@ class Helpers
         }
 
         $permission = auth('admin')->user()->role->modules;
-        if (isset($permission) && in_array($mod_name, (array)json_decode($permission)) == true) {
+        if (isset($permission) && in_array($mod_name, (array) json_decode($permission)) == true) {
             return true;
         }
 
@@ -1253,19 +1255,20 @@ class Helpers
     public static function employee_module_permission_check($mod_name)
     {
         if (auth('vendor')->check()) {
+            $store = auth('vendor')->user()->stores->first();
             if ($mod_name == 'reviews') {
-                return auth('vendor')->user()->stores[0]->reviews_section;
+                return $store->reviews_section ?? false;
             } else if ($mod_name == 'deliveryman') {
-                return auth('vendor')->user()->stores[0]->self_delivery_system;
+                return $store->self_delivery_system ?? false;
             } else if ($mod_name == 'pos') {
-                return auth('vendor')->user()->stores[0]->pos_system;
+                return $store->pos_system ?? false;
             } else if ($mod_name == 'addon') {
-                return config('module.' . auth('vendor')->user()->stores[0]->module->module_type)['add_on'];
+                return config('module.' . ($store->module->module_type ?? ''))['add_on'] ?? false;
             }
             return true;
         } else if (auth('vendor_employee')->check()) {
             $permission = auth('vendor_employee')->user()->role->modules;
-            if (isset($permission) && in_array($mod_name, (array)json_decode($permission)) == true) {
+            if (isset($permission) && in_array($mod_name, (array) json_decode($permission)) == true) {
                 if ($mod_name == 'reviews') {
                     return auth('vendor_employee')->user()->store->reviews_section;
                 } else if ($mod_name == 'deliveryman') {
@@ -1338,7 +1341,7 @@ class Helpers
 
     public static function insert_business_settings_key($key, $value = null)
     {
-        $data =  BusinessSetting::where('key', $key)->first();
+        $data = BusinessSetting::where('key', $key)->first();
         if (!$data) {
             DB::table('business_settings')->updateOrInsert(['key' => $key], [
                 'value' => $value,
@@ -1503,7 +1506,7 @@ class Helpers
         $keys = BusinessSetting::whereIn('key', ['toggle_veg_non_veg', 'toggle_dm_registration', 'toggle_store_registration'])->get();
         $data = [];
         foreach ($keys as $key) {
-            $data[$key->key] = (bool)$key->value;
+            $data[$key->key] = (bool) $key->value;
         }
         return $data;
     }

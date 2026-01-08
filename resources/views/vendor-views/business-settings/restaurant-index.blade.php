@@ -198,8 +198,8 @@
                                         </div>
                                     </div>                                    
                                     <div class="row">
-                                        @if($store->self_delivery_system)
-                                        <div class="col-sm-{{$store->self_delivery_system?'6':'12'}} col-12">
+                                        @if(optional($store)->self_delivery_system)
+                                        <div class="col-sm-{{optional($store)->self_delivery_system?'6':'12'}} col-12">
                                             <div class="form-group">
                                                 <label class="input-label text-capitalize" for="title">{{translate('messages.delivery_charge')}}</label>
                                                 <input type="number" name="delivery_charge" step="0.01" min="0" max="100000" class="form-control" placeholder="100" value="{{$store->delivery_charge??'0'}}"> 
@@ -207,7 +207,7 @@
                                         </div>
                                         @endif
                 
-                                        <div class="col-sm-{{$store->self_delivery_system?'6':'12'}} col-12">
+                                        <div class="col-sm-{{optional($store)->self_delivery_system?'6':'12'}} col-12">
                                             <div class="form-group p-2 border">
                                                 <label class="d-flex justify-content-between switch toggle-switch-sm text-dark" for="gst_status">
                                                     <span>{{translate('messages.gst')}} <span class="input-label-secondary" title="{{translate('messages.gst_status_warning')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.gst_status_warning')}}"></span></span>

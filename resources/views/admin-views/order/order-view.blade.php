@@ -219,7 +219,7 @@
                                     <button class="btn w-100" data-toggle="modal" data-target="#imagemodal"
                                         title="{{ translate('messages.order') }} {{ translate('messages.attachment') }}">
                                         <div class="gallary-card">
-                                            <img src="{{ asset('storage/app/' . 'public/order/' . $order->order_attachment) }}"
+                                            <img src="{{ asset('storage/order/' . $order->order_attachment) }}"
                                                 alt="{{ translate('messages.prescription') }}" style="height:auto;width:50%;">
                                         </div>
                                     </button>
@@ -235,7 +235,7 @@
                                                             class="sr-only">Close</span></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <img src="{{ asset('storage/app/' . 'public/order/' . $order->order_attachment) }}"
+                                                    <img src="{{ asset('storage/order/' . $order->order_attachment) }}"
                                                         style="width: 100%; height: auto;">
                                                 </div>
                                                 <div class="modal-footer">

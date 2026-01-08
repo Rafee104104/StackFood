@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.deliverymen'))
+@section('title', translate('messages.deliverymen'))
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,21 +15,21 @@
                     <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.deliverymen')}}</h1>
                 </div>
                 {{--<a href="{{route('admin.delivery-man.add')}}" class="btn btn-primary pull-right"><i
-                                class="tio-add-circle"></i> {{translate('messages.add')}} {{translate('messages.deliveryman')}}</a>--}}
-                
+                        class="tio-add-circle"></i> {{translate('messages.add')}}
+                    {{translate('messages.deliveryman')}}</a>--}}
+
                 @if(!isset(auth('admin')->user()->zone_id))
-                <div class="col-sm-auto" style="width: 306px;">
-                    <select name="zone_id" class="form-control js-select2-custom"
+                    <div class="col-sm-auto" style="width: 306px;">
+                        <select name="zone_id" class="form-control js-select2-custom"
                             onchange="set_zone_filter('{{route('admin.delivery-man.list')}}', this.value)">
-                        <option value="all">All Zones</option>
-                        @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
-                            <option
-                                value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
-                                {{$z['name']}}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                            <option value="all">All Zones</option>
+                            @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
+                                <option value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id'] ? 'selected' : ''}}>
+                                    {{$z['name']}}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 @endif
             </div>
         </div>
@@ -40,9 +40,10 @@
                 <div class="card">
                     <!-- Header -->
                     <div class="card-header p-1">
-                        <h5>{{translate('messages.deliveryman')}} {{translate('messages.list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$delivery_men->total()}}</span></h5>
-                        <form action="javascript:" id="search-form" >
-                                        <!-- Search -->
+                        <h5>{{translate('messages.deliveryman')}} {{translate('messages.list')}}<span
+                                class="badge badge-soft-dark ml-2" id="itemCount">{{$delivery_men->total()}}</span></h5>
+                        <form action="javascript:" id="search-form">
+                            <!-- Search -->
                             @csrf
                             <div class="input-group input-group-merge input-group-flush">
                                 <div class="input-group-prepend">
@@ -51,7 +52,7 @@
                                     </div>
                                 </div>
                                 <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                        placeholder="{{translate('messages.search')}}" aria-label="Search" required>
+                                    placeholder="{{translate('messages.search')}}" aria-label="Search" required>
                                 <button type="submit" class="btn btn-light">{{translate('messages.search')}}</button>
 
                             </div>
@@ -63,71 +64,81 @@
                     <!-- Table -->
                     <div class="table-responsive datatable-custom">
                         <table id="columnSearchDatatable"
-                               class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
-                               data-hs-datatables-options='{
-                                 "order": [],
-                                 "orderCellsTop": true,
-                                 "paging":false
-                               }'>
+                            class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                            data-hs-datatables-options='{
+                                     "order": [],
+                                     "orderCellsTop": true,
+                                     "paging":false
+                                   }'>
                             <thead class="thead-light">
-                            <tr>
-                                <th class="text-capitalize">{{translate('messages.#')}}</th>
-                                <th class="text-capitalize">{{translate('messages.name')}}</th>
-                                <th class="text-capitalize">{{translate('messages.zone')}}</th>
-                                <th class="text-capitalize">{{translate('messages.availability')}} {{translate('messages.status')}}</th>
-                                <th class="text-capitalize">{{translate('messages.phone')}}</th>
-                                <th class="text-capitalize">{{translate('messages.action')}}</th>
-                            </tr>
+                                <tr>
+                                    <th class="text-capitalize">{{translate('messages.#')}}</th>
+                                    <th class="text-capitalize">{{translate('messages.name')}}</th>
+                                    <th class="text-capitalize">{{translate('messages.zone')}}</th>
+                                    <th class="text-capitalize">{{translate('messages.availability')}}
+                                        {{translate('messages.status')}}</th>
+                                    <th class="text-capitalize">{{translate('messages.phone')}}</th>
+                                    <th class="text-capitalize">{{translate('messages.action')}}</th>
+                                </tr>
                             </thead>
 
                             <tbody id="set-rows">
-                            @foreach($delivery_men as $key=>$dm)
-                                <tr>
-                                    <td>{{$key+$delivery_men->firstItem()}}</td>
-                                    <td>
-                                        <a class="media align-items-center" href="{{route('admin.delivery-man.preview',[$dm['id']])}}">
-                                            <img class="avatar avatar-lg mr-3" onerror="this.src='{{asset('assets/admin/img/160x160/img1.jpg')}}'"
-                                                    src="{{asset('storage/delivery-man')}}/{{$dm['image']}}" alt="{{$dm['f_name']}} {{$dm['l_name']}}">
-                                            <div class="media-body">
-                                                <h5 class="text-hover-primary mb-0">{{$dm['f_name'].' '.$dm['l_name']}}</h5>
-                                            </div>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        @if($dm->zone)
-                                        <label class="badge badge-soft-info">{{$dm->zone->name}}</label>
-                                        @else
-                                        <label class="badge badge-soft-warning">{{translate('messages.zone').' '.translate('messages.deleted')}}</label>
-                                        @endif
-                                        {{--<span class="d-block font-size-sm">{{$banner['image']}}</span>--}}
-                                    </td>
-                                    <td class="text-center">
-                                        @if($dm->application_status == 'approved')
-                                            @if($dm->active)
-                                            <label class="badge badge-soft-primary">{{translate('messages.online')}}</label>
+                                @foreach($delivery_men as $key => $dm)
+                                    <tr>
+                                        <td>{{$key + $delivery_men->firstItem()}}</td>
+                                        <td>
+                                            <a class="media align-items-center"
+                                                href="{{route('admin.delivery-man.preview', [$dm['id']])}}">
+                                                <img class="avatar avatar-lg mr-3"
+                                                    onerror="this.src='{{asset('assets/admin/img/160x160/img1.jpg')}}'"
+                                                    src="{{$dm['image'] ? asset('storage/delivery-man/' . $dm['image']) : asset('assets/admin/img/160x160/img1.jpg')}}"
+                                                    alt="{{$dm['f_name']}} {{$dm['l_name']}}">
+                                                <div class="media-body">
+                                                    <h5 class="text-hover-primary mb-0">{{$dm['f_name'] . ' ' . $dm['l_name']}}</h5>
+                                                </div>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            @if($dm->zone)
+                                                <label class="badge badge-soft-info">{{$dm->zone->name}}</label>
                                             @else
-                                            <label class="badge badge-soft-secondary">{{translate('messages.offline')}}</label>
+                                                <label
+                                                    class="badge badge-soft-warning">{{translate('messages.zone') . ' ' . translate('messages.deleted')}}</label>
                                             @endif
-                                        @elseif ($dm->application_status == 'denied')
-                                            <label class="badge badge-soft-danger">{{translate('messages.denied')}}</label>
-                                        @else
-                                            <label class="badge badge-soft-info">{{translate('messages.pending')}}</label>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a class="deco-none" href="tel:{{$dm['phone']}}">{{$dm['phone']}}</a>
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-sm btn-white" href="{{route('admin.delivery-man.edit',[$dm['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
-                                        </a>
-                                        <a class="btn btn-sm btn-white text-danger" href="javascript:" onclick="form_alert('delivery-man-{{$dm['id']}}','Want to remove this deliveryman ?')" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
-                                        </a>
-                                        <form action="{{route('admin.delivery-man.delete',[$dm['id']])}}" method="post" id="delivery-man-{{$dm['id']}}">
-                                            @csrf @method('delete')
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
+                                            {{--<span class="d-block font-size-sm">{{$banner['image']}}</span>--}}
+                                        </td>
+                                        <td class="text-center">
+                                            @if($dm->application_status == 'approved')
+                                                @if($dm->active)
+                                                    <label class="badge badge-soft-primary">{{translate('messages.online')}}</label>
+                                                @else
+                                                    <label class="badge badge-soft-secondary">{{translate('messages.offline')}}</label>
+                                                @endif
+                                            @elseif ($dm->application_status == 'denied')
+                                                <label class="badge badge-soft-danger">{{translate('messages.denied')}}</label>
+                                            @else
+                                                <label class="badge badge-soft-info">{{translate('messages.pending')}}</label>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a class="deco-none" href="tel:{{$dm['phone']}}">{{$dm['phone']}}</a>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-white"
+                                                href="{{route('admin.delivery-man.edit', [$dm['id']])}}"
+                                                title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
+                                            </a>
+                                            <a class="btn btn-sm btn-white text-danger" href="javascript:"
+                                                onclick="form_alert('delivery-man-{{$dm['id']}}','Want to remove this deliveryman ?')"
+                                                title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                            </a>
+                                            <form action="{{route('admin.delivery-man.delete', [$dm['id']])}}" method="post"
+                                                id="delivery-man-{{$dm['id']}}">
+                                                @csrf @method('delete')
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                         <hr>
@@ -135,7 +146,7 @@
                         <div class="page-area">
                             <table>
                                 <tfoot>
-                                {!! $delivery_men->links() !!}
+                                    {!! $delivery_men->links() !!}
                                 </tfoot>
                             </table>
                         </div>
