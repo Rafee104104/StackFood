@@ -32,7 +32,7 @@
     <div class="row" style="margin-top: 20px">
         <div class="col-md-12">
             <div class="card">
-            <div class="card-header py-0">
+                <div class="card-header py-0">
                     <h5>{{translate('messages.Employee')}} {{translate('messages.table')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$em->total()}}</span></h5>
                     <form action="javascript:" id="search-form">
                         @csrf
@@ -52,30 +52,30 @@
                 <div class="card-body" style="padding: 0">
                     <div class="table-responsive">
                         <table id="datatable"
-                               class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
-                               style="width: 100%"
-                               data-hs-datatables-options='{
+                            class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                            style="width: 100%"
+                            data-hs-datatables-options='{
                                  "order": [],
                                  "orderCellsTop": true,
                                  "paging":false
                                }'>
                             <thead class="thead-light">
-                            <tr>
-                                <th>{{translate('messages.#')}}</th>
-                                <th>{{translate('messages.name')}}</th>
-                                <th>{{translate('messages.email')}}</th>
-                                <th>{{translate('messages.phone')}}</th>
-                                <th>{{translate('messages.Role')}}</th>
-                                <th style="width: 50px">{{translate('messages.action')}}</th>
-                            </tr>
+                                <tr>
+                                    <th>{{translate('messages.#')}}</th>
+                                    <th>{{translate('messages.name')}}</th>
+                                    <th>{{translate('messages.email')}}</th>
+                                    <th>{{translate('messages.phone')}}</th>
+                                    <th>{{translate('messages.Role')}}</th>
+                                    <th style="width: 50px">{{translate('messages.action')}}</th>
+                                </tr>
                             </thead>
                             <tbody id="set-rows">
-                            @foreach($em as $k=>$e)
+                                @foreach($em as $k=>$e)
                                 <tr>
                                     <th scope="row">{{$k+$em->firstItem()}}</th>
                                     <td class="text-capitalize">{{$e['f_name']}} {{$e['l_name']}}</td>
-                                    <td >
-                                      {{$e['email']}}
+                                    <td>
+                                        {{$e['email']}}
                                     </td>
                                     <td>{{$e['phone']}}</td>
                                     <td>{{$e->role?$e->role['name']:translate('messages.role_deleted')}}</td>
@@ -83,16 +83,27 @@
                                         <a class="btn btn-sm btn-white"
                                             href="{{route('admin.employee.edit',[$e['id']])}}" title="{{translate('messages.edit')}} {{translate('messages.Employee')}}"><i class="tio-edit"></i>
                                         </a>
-                                        <a class="btn btn-sm btn-danger" href="javascript:"
-                                            onclick="form_alert('employee-{{$e['id']}}','{{translate('messages.Want_to_delete_this_role')}}')" title="{{translate('messages.delete')}} {{translate('messages.Employee')}}"><i class="tio-delete-outlined"></i>
+                                        <script>
+                                            $(document).on('click', '.delete-btn', function() {
+                                                let id = $(this).data('id');
+                                                let message = $(this).data('message');
+                                                form_alert(id, message);
+                                            });
+                                        </script>
+                                        <a class="btn btn-sm btn-danger delete-btn"
+                                            data-id="employee-{{ $e->id }}"
+                                            data-message="{{ translate('messages.Want_to_delete_this_role') }}"
+                                            title="{{ translate('messages.delete') }} {{ translate('messages.Employee') }}">
+                                            <i class="tio-delete-outlined"></i>
                                         </a>
+
                                         <form action="{{route('admin.employee.delete',[$e['id']])}}"
-                                                method="post" id="employee-{{$e['id']}}">
+                                            method="post" id="employee-{{$e['id']}}">
                                             @csrf @method('delete')
                                         </form>
                                     </td>
                                 </tr>
-                            @endforeach
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -101,7 +112,7 @@
                     <div class="page-area">
                         <table>
                             <tfoot>
-                            {!! $em->links() !!}
+                                {!! $em->links() !!}
                             </tfoot>
                         </table>
                     </div>
@@ -113,37 +124,37 @@
 @endsection
 
 @push('script_2')
-    <script>
-        // Call the dataTables jQuery plugin
-        $(document).ready(function () {
-            $('#dataTable').DataTable();
+<script>
+    // Call the dataTables jQuery plugin
+    $(document).ready(function() {
+        $('#dataTable').DataTable();
+    });
+    $('#search-form').on('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
-        $('#search-form').on('submit', function (e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.employee.search')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('#itemCount').html(data.count);
-                    $('.page-area').hide();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
+        $.post({
+            url: "{{route('admin.employee.search')}}",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                $('#loading').show();
+            },
+            success: function(data) {
+                $('#set-rows').html(data.view);
+                $('#itemCount').html(data.count);
+                $('.page-area').hide();
+            },
+            complete: function() {
+                $('#loading').hide();
+            },
         });
-    </script>
+    });
+</script>
 @endpush

@@ -18,41 +18,55 @@
         </div>
         <div class="row">
             <div class="col-sm-4 col-12 mb-2">
-                <select name="module_id" class="form-control js-select2-custom" onchange="set_filter('{{url()->full()}}',this.value,'module_id')" title="{{translate('messages.select')}} {{translate('messages.modules')}}">
-                    <option value="" {{!request('module_id') ? 'selected':''}}>{{translate('messages.all')}} {{translate('messages.modules')}}</option>
-                    @foreach (\App\Models\Module::notParcel()->get() as $module)
-                    @if (config('module.'.$module->module_type)['stock'])
-                    <option
-                        value="{{$module->id}}" {{request('module_id') == $module->id?'selected':''}}>
-                        {{$module['module_name']}}
+                <select name="module_id"
+                    class="form-control js-select2-custom"
+                    onchange="set_filter('{{ request()->fullUrl() }}', this.value, 'module_id')"
+                    title="{{ translate('messages.select') }} {{ translate('messages.modules') }}">
+                    <option value="" {{ !request('module_id') ? 'selected' : '' }}>
+                        {{ translate('messages.all') }} {{ translate('messages.modules') }}
+                    </option>
+
+                    @foreach(\App\Models\Module::notParcel()->get() as $module)
+                    @if(config('module.' . $module->module_type)['stock'] ?? false)
+                    <option value="{{ $module->id }}" {{ request('module_id') == $module->id ? 'selected' : '' }}>
+                        {{ $module->module_name }}
                     </option>
                     @endif
-
                     @endforeach
                 </select>
             </div>
+
             <div class="col-sm-4 col-12 mb-2">
-                <select name="zone_id" class="form-control js-select2-custom"
-                    onchange="set_zone_filter('{{url()->full()}}',this.value)" id="zone">
-                    <option value="all">{{translate('All Zones')}}</option>
+                <select name="zone_id"
+                    class="form-control js-select2-custom"
+                    onchange="set_zone_filter('{{ request()->fullUrl() }}', this.value)"
+                    id="zone">
+                    <option value="all" {{ !isset($zone) ? 'selected' : '' }}>
+                        {{ translate('messages.all_zones') }}
+                    </option>
+
                     @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
-                    <option
-                        value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
-                        {{($z['name'])}}
+                    <option value="{{ $z->id }}" {{ (isset($zone) && $zone->id == $z->id) ? 'selected' : '' }}>
+                        {{ $z->name }}
                     </option>
                     @endforeach
                 </select>
             </div>
+
             <div class="col-sm-4 col-12">
-                <select name="store_id" onchange="set_store_filter('{{url()->full()}}',this.value)" data-placeholder="{{translate('messages.select')}} {{translate('messages.store')}}" class="js-data-example-ajax form-control">
+                <select name="store_id"
+                    class="js-data-example-ajax form-control"
+                    data-placeholder="{{ translate('messages.select') }} {{ translate('messages.store') }}"
+                    onchange="set_store_filter('{{ request()->fullUrl() }}', this.value)">
                     @if(isset($store))
-                    <option value="{{$store->id}}" selected>{{$store->name}}</option>
+                    <option value="{{ $store->id }}" selected>{{ $store->name }}</option>
                     @else
-                    <option value="all" selected>{{translate('messages.all')}} {{translate('messages.stores')}}</option>
+                    <option value="all" selected>{{ translate('messages.all') }} {{ translate('messages.stores') }}</option>
                     @endif
                 </select>
             </div>
         </div>
+
     </div>
     <!-- End Page Header -->
     <!-- Card -->
@@ -120,10 +134,13 @@
                     <tr>
                         <td>{{$key+$items->firstItem()}}</td>
                         <td>
+                            @php
+                            $str = "asset('assets/admin/img/160x160/img2.jpg')";
+                            @endphp
                             <a class="media align-items-center" href="{{route('admin.item.view',[$item['id']])}}">
                                 <img class="avatar avatar-lg mr-3"
-                                    src="{{ asset('storage/product/' . $item->image) }}"
-                                    onerror="this.onerror=null;this.src='{{ $s }}'"
+                                    src="{{ asset('storage/app/public/product/' . $item->image) }}"
+                                    onerror="this.onerror=null;this.src='{{ $str }}'"
                                     alt="{{ $item->name }} image">
 
 
@@ -184,6 +201,9 @@
     src="{{asset('public/assets/admin')}}/vendor/chartjs-chart-matrix/dist/chartjs-chart-matrix.min.js"></script>
 <script src="{{asset('public/assets/admin')}}/js/hs.chartjs-matrix.js"></script>
 
+
+
+
 <script>
     $(document).ready(function() {
         $('.js-data-example-ajax').select2({
@@ -194,22 +214,17 @@
                 data: function(params) {
                     let query = {
                         q: params.term || '',
-                        page: params.page || 1,
-                        @if(isset($zone))
-                        zone_ids: [{
-                            {
-                                $zone - > id
-                            }
-                        }],
-                        @endif
-                        @if(request() - > has('module_id'))
-                        module_id: {
-                            {
-                                request('module_id')
-                            }
-                        },
-                        @endif
+                        page: params.page || 1
                     };
+
+                    if (APP_FILTERS.zoneId !== null) {
+                        query.zone_ids = [APP_FILTERS.zoneId];
+                    }
+
+                    if (APP_FILTERS.moduleId !== null) {
+                        query.module_id = APP_FILTERS.moduleId;
+                    }
+
                     return query;
                 },
                 processResults: function(data) {
@@ -222,6 +237,9 @@
         });
     });
 </script>
+
+
+
 
 
 <script>

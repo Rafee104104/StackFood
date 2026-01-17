@@ -1,27 +1,27 @@
 @extends('layouts.admin.app')
 
-@section('title', \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()->value ?? 'Dashboard')
+@section('title',\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()->value??'Dashboard')
 
 @push('css_or_js')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <style>
-        .grid-card {
-            border: 2px solid #00000012;
-            border-radius: 10px;
-            padding: 10px;
-        }
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<style>
+    .grid-card {
+        border: 2px solid #00000012;
+        border-radius: 10px;
+        padding: 10px;
+    }
 
-        .label_1 {
-            position: absolute;
-            font-size: 10px;
-            background: #396786;
-            color: #fff;
-            width: 60px;
-            padding: 3px 5px;
-            font-weight: bold;
-            border-radius: 6px;
-        }
-    </style>
+    .label_1 {
+        position: absolute;
+        font-size: 10px;
+        background: #396786;
+        color: #fff;
+        width: 60px;
+        padding: 3px 5px;
+        font-weight: bold;
+        border-radius: 6px;
+    }
+</style>
 @endpush
 
 @section('content')
@@ -43,9 +43,10 @@
                     onchange="fetch_data_zone_wise(this.value)">
                     <option value="all">All Zones</option>
                     @foreach(\App\Models\Zone::orderBy('name')->get() as $zone)
-                        <option value="{{$zone['id']}}" {{$params['zone_id'] == $zone['id'] ? 'selected' : ''}}>
-                            {{$zone['name']}}
-                        </option>
+                    <option
+                        value="{{$zone['id']}}" {{$params['zone_id'] == $zone['id']?'selected':''}}>
+                        {{$zone['name']}}
+                    </option>
                     @endforeach
                 </select>
             </div>
@@ -63,17 +64,19 @@
                 </div>
                 <div class="col-3">
                     <select class="custom-select" name="statistics_type" onchange="order_stats_update(this.value)">
-                        <option value="overall" {{$params['statistics_type'] == 'overall' ? 'selected' : ''}}>
+                        <option
+                            value="overall" {{$params['statistics_type'] == 'overall'?'selected':''}}>
                             {{translate('messages.Overall Statistics')}}
                         </option>
-                        <option value="today" {{$params['statistics_type'] == 'today' ? 'selected' : ''}}>
+                        <option
+                            value="today" {{$params['statistics_type'] == 'today'?'selected':''}}>
                             {{translate("messages.Today's Statistics")}}
                         </option>
                     </select>
                 </div>
             </div>
             <div class="row gx-2 gx-lg-3" id="order_stats">
-                @include('admin-views.partials._dashboard-order-stats', ['data' => $data])
+                @include('admin-views.partials._dashboard-order-stats',['data'=>$data])
             </div>
         </div>
     </div>
@@ -85,7 +88,7 @@
             <!-- Card -->
             <div class="card h-100" id="monthly-earning-graph">
                 <!-- Body -->
-                @include('admin-views.partials._monthly-earning-graph', ['total_sell' => $total_sell, 'commission' => $commission])
+                @include('admin-views.partials._monthly-earning-graph',['total_sell'=>$total_sell,'commission'=>$commission])
                 <!-- End Body -->
             </div>
             <!-- End Card -->
@@ -104,10 +107,12 @@
                     </h5>
                     <select class="custom-select" style="width: 30%" name="user_overview"
                         onchange="user_overview_stats_update(this.value)">
-                        <option value="this_month" {{$params['user_overview'] == 'this_month' ? 'selected' : ''}}>
+                        <option
+                            value="this_month" {{$params['user_overview'] == 'this_month'?'selected':''}}>
                             {{translate('This month')}}
                         </option>
-                        <option value="overall" {{$params['user_overview'] == 'overall' ? 'selected' : ''}}>
+                        <option
+                            value="overall" {{$params['user_overview'] == 'overall'?'selected':''}}>
                             {{translate('messages.Overall')}}
                         </option>
                     </select>
@@ -116,62 +121,62 @@
 
                 <!-- Body -->
                 <div class="card-body" id="user-overview-board">
-                    @if($params['zone_id'] != 'all')
-                    @php($zone_name = \App\Models\Zone::where('id', $params['zone_id'])->first()->name)
+                    @if($params['zone_id']!='all')
+                    @php($zone_name=\App\Models\Zone::where('id',$params['zone_id'])->first()->name)
                     @else
-                    @php($zone_name = 'All')
-                                        @endif
-                                        <label class="badge badge-soft-primary">( Zone : {{$zone_name}} )</label>
-                                        <div class="chartjs-custom mx-auto">
-                                            <canvas id="user-overview" class="mt-2"></canvas>
-                                        </div>
-                                        <!-- End Chart -->
-                                    </div>
-                                    <!-- End Body -->
-                                </div>
-                            </div>
+                    @php($zone_name='All')
+                    @endif
+                    <label class="badge badge-soft-primary">( Zone : {{$zone_name}} )</label>
+                    <div class="chartjs-custom mx-auto">
+                        <canvas id="user-overview" class="mt-2"></canvas>
+                    </div>
+                    <!-- End Chart -->
+                </div>
+                <!-- End Body -->
+            </div>
+        </div>
 
-                            <div class="col-lg-6 mb-3">
-                                <!-- Card -->
-                                <div class="card h-100" id="top-selling-foods-view">
-                                    @include('admin-views.partials._top-selling-foods', ['top_sell' => $data['top_sell']])
-                                </div>
-                                <!-- End Card -->
-                            </div>
+        <div class="col-lg-6 mb-3">
+            <!-- Card -->
+            <div class="card h-100" id="top-selling-foods-view">
+                @include('admin-views.partials._top-selling-foods',['top_sell'=>$data['top_sell']])
+            </div>
+            <!-- End Card -->
+        </div>
 
-                            <div class="col-lg-6 mb-3">
-                                <!-- Card -->
-                                <div class="card h-100" id="popular-restaurants-view">
-                                    @include('admin-views.partials._popular-restaurants', ['popular' => $data['popular']])
-                                </div>
-                                <!-- End Card -->
-                            </div>
+        <div class="col-lg-6 mb-3">
+            <!-- Card -->
+            <div class="card h-100" id="popular-restaurants-view">
+                @include('admin-views.partials._popular-restaurants',['popular'=>$data['popular']])
+            </div>
+            <!-- End Card -->
+        </div>
 
-                            <div class="col-lg-6 mt-3">
-                                <!-- Card -->
-                                <div class="card h-100" id="top-rated-foods-view">
-                                    @include('admin-views.partials._top-rated-foods', ['top_rated_foods' => $data['top_rated_foods']])
-                                </div>
-                                <!-- End Card -->
-                            </div>
+        <div class="col-lg-6 mt-3">
+            <!-- Card -->
+            <div class="card h-100" id="top-rated-foods-view">
+                @include('admin-views.partials._top-rated-foods',['top_rated_foods'=>$data['top_rated_foods']])
+            </div>
+            <!-- End Card -->
+        </div>
 
-                            <div class="col-lg-6 mt-3">
-                                <!-- Card -->
-                                <div class="card h-100" id="top-deliveryman-view">
-                                    @include('admin-views.partials._top-deliveryman', ['top_deliveryman' => $data['top_deliveryman']])
-                                </div>
-                                <!-- End Card -->
-                            </div>
+        <div class="col-lg-6 mt-3">
+            <!-- Card -->
+            <div class="card h-100" id="top-deliveryman-view">
+                @include('admin-views.partials._top-deliveryman',['top_deliveryman'=>$data['top_deliveryman']])
+            </div>
+            <!-- End Card -->
+        </div>
 
-                            <div class="col-lg-6 mt-3">
-                                <!-- Card -->
-                                <div class="card h-100" id="top-restaurants-view">
-                                    @include('admin-views.partials._top-restaurants', ['top_restaurants' => $data['top_restaurants']])
-                                </div>
-                                <!-- End Card -->
-                            </div>
-                        </div>
-                    @else
+        <div class="col-lg-6 mt-3">
+            <!-- Card -->
+            <div class="card h-100" id="top-restaurants-view">
+                @include('admin-views.partials._top-restaurants',['top_restaurants'=>$data['top_restaurants']])
+            </div>
+            <!-- End Card -->
+        </div>
+    </div>
+    @else
     <!-- Page Header -->
     <div class="page-header">
         <div class="row align-items-center">
@@ -187,169 +192,161 @@
 @endsection
 
 @push('script')
-    <script src="{{asset('assets/admin/vendor/chart.js/dist/Chart.min.js')}}"></script>
-    <script src="{{asset('assets/admin/vendor/chart.js.extensions/chartjs-extensions.js')}}"></script>
-    <script src="{{asset('assets/admin/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js')}}"></script>
+<script src="{{asset('assets/admin/vendor/chart.js/dist/Chart.min.js')}}"></script>
+<script src="{{asset('assets/admin/vendor/chart.js.extensions/chartjs-extensions.js')}}"></script>
+<script
+    src="{{asset('assets/admin/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js')}}"></script>
 @endpush
 
 
 @push('script_2')
-    <script>
-        function initMonthlyEarningChart() {
-            if (typeof Chart === 'undefined') {
-                return;
-            }
+<script>
+    // INITIALIZATION OF CHARTJS
+    // =======================================================
+    Chart.plugins.unregister(ChartDataLabels);
 
-            if (typeof ChartDataLabels !== 'undefined') {
-                Chart.plugins.unregister(ChartDataLabels);
-            }
+    $('.js-chart').each(function() {
+        $.HSCore.components.HSChartJS.init($(this));
+    });
 
-            $('.js-chart').each(function () {
-                $.HSCore.components.HSChartJS.init($(this));
-            });
+    var updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
+</script>
 
-            $.HSCore.components.HSChartJS.init($('#updatingData'));
-        }
-
-        initMonthlyEarningChart();
-    </script>
-
-    <script>
-        var ctx = document.getElementById('user-overview');
-        var myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: [
-                    '{{translate('messages.customer')}}',
-                    '{{translate('messages.store')}}',
-                    '{{translate('messages.Delivery Man')}}'
+<script>
+    var ctx = document.getElementById('user-overview');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                "{{translate('messages.customer')}}",
+                "{{translate('messages.store')}}",
+                "{{translate('messages.Delivery Man')}}"
+            ],
+            datasets: [{
+                label: 'User',
+                data: ["{{$data['customer']}}", "{{$data['stores']}}", "{{$data['delivery_man']}}"],
+                backgroundColor: [
+                    '#628395',
+                    '#055052',
+                    '#53B8BB'
                 ],
-                datasets: [{
-                    label: 'User',
-                    data: ['{{$data['customer']}}', '{{$data['stores']}}', '{{$data['delivery_man']}}'],
-                    backgroundColor: [
-                        '#628395',
-                        '#055052',
-                        '#53B8BB'
-                    ],
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
+            }
+        }
+    });
+</script>
+
+<script>
+    function order_stats_update(type) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-    </script>
-
-    <script>
-        function order_stats_update(type) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.dashboard-stats.order')}}',
-                data: {
-                    statistics_type: type
-                },
-                beforeSend: function () {
-                    $('#loading').show()
-                },
-                success: function (data) {
-                    insert_param('statistics_type', type);
-                    $('#order_stats').html(data.view)
-                },
-                complete: function () {
-                    $('#loading').hide()
-                }
-            });
-        }
-
-        function fetch_data_zone_wise(zone_id) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.dashboard-stats.zone')}}',
-                data: {
-                    zone_id: zone_id
-                },
-                beforeSend: function () {
-                    $('#loading').show()
-                },
-                success: function (data) {
-                    insert_param('zone_id', zone_id);
-                    $('#order_stats').html(data.order_stats);
-                    $('#user-overview-board').html(data.user_overview);
-                    $('#monthly-earning-graph').html(data.monthly_graph);
-                    initMonthlyEarningChart();
-                    $('#popular-restaurants-view').html(data.popular_restaurants);
-                    $('#top-deliveryman-view').html(data.top_deliveryman);
-                    $('#top-rated-foods-view').html(data.top_rated_foods);
-                    $('#top-restaurants-view').html(data.top_restaurants);
-                    $('#top-selling-foods-view').html(data.top_selling_foods);
-                },
-                complete: function () {
-                    $('#loading').hide()
-                }
-            });
-        }
-
-        function user_overview_stats_update(type) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.dashboard-stats.user-overview')}}',
-                data: {
-                    user_overview: type
-                },
-                beforeSend: function () {
-                    $('#loading').show()
-                },
-                success: function (data) {
-                    insert_param('user_overview', type);
-                    $('#user-overview-board').html(data.view)
-                },
-                complete: function () {
-                    $('#loading').hide()
-                }
-            });
-        }
-    </script>
-
-    <script>
-        function insert_param(key, value) {
-            key = encodeURIComponent(key);
-            value = encodeURIComponent(value);
-            // kvp looks like ['key1=value1', 'key2=value2', ...]
-            var kvp = document.location.search.substr(1).split('&');
-            let i = 0;
-
-            for (; i < kvp.length; i++) {
-                if (kvp[i].startsWith(key + '=')) {
-                    let pair = kvp[i].split('=');
-                    pair[1] = value;
-                    kvp[i] = pair.join('=');
-                    break;
-                }
+        $.post({
+            url: "{{route('admin.dashboard-stats.order')}}",
+            data: {
+                statistics_type: type
+            },
+            beforeSend: function() {
+                $('#loading').show()
+            },
+            success: function(data) {
+                insert_param('statistics_type', type);
+                $('#order_stats').html(data.view)
+            },
+            complete: function() {
+                $('#loading').hide()
             }
-            if (i >= kvp.length) {
-                kvp[kvp.length] = [key, value].join('=');
+        });
+    }
+
+    function fetch_data_zone_wise(zone_id) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-            // can return this or...
-            let params = kvp.join('&');
-            // change url page with new params
-            window.history.pushState('page2', 'Title', '{{url()->current()}}?' + params);
+        });
+        $.post({
+            url: "{{route('admin.dashboard-stats.zone')}}",
+            data: {
+                zone_id: zone_id
+            },
+            beforeSend: function() {
+                $('#loading').show()
+            },
+            success: function(data) {
+                insert_param('zone_id', zone_id);
+                $('#order_stats').html(data.order_stats);
+                $('#user-overview-board').html(data.user_overview);
+                $('#monthly-earning-graph').html(data.monthly_graph);
+                $('#popular-restaurants-view').html(data.popular_restaurants);
+                $('#top-deliveryman-view').html(data.top_deliveryman);
+                $('#top-rated-foods-view').html(data.top_rated_foods);
+                $('#top-restaurants-view').html(data.top_restaurants);
+                $('#top-selling-foods-view').html(data.top_selling_foods);
+            },
+            complete: function() {
+                $('#loading').hide()
+            }
+        });
+    }
+
+    function user_overview_stats_update(type) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.post({
+            url: "{{route('admin.dashboard-stats.user-overview')}}",
+            data: {
+                user_overview: type
+            },
+            beforeSend: function() {
+                $('#loading').show()
+            },
+            success: function(data) {
+                insert_param('user_overview', type);
+                $('#user-overview-board').html(data.view)
+            },
+            complete: function() {
+                $('#loading').hide()
+            }
+        });
+    }
+</script>
+
+<script>
+    function insert_param(key, value) {
+        key = encodeURIComponent(key);
+        value = encodeURIComponent(value);
+        // kvp looks like ['key1=value1', 'key2=value2', ...]
+        var kvp = document.location.search.substr(1).split('&');
+        let i = 0;
+
+        for (; i < kvp.length; i++) {
+            if (kvp[i].startsWith(key + '=')) {
+                let pair = kvp[i].split('=');
+                pair[1] = value;
+                kvp[i] = pair.join('=');
+                break;
+            }
         }
-    </script>
+        if (i >= kvp.length) {
+            kvp[kvp.length] = [key, value].join('=');
+        }
+        // can return this or...
+        let params = kvp.join('&');
+        // change url page with new params
+        window.history.pushState('page2', 'Title', '{{url()->current()}}?' + params);
+    }
+</script>
 @endpush
