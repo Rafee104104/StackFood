@@ -8,7 +8,7 @@
     <title>{{$business_name}} | {{translate('messages.pos_system')}}</title>
     <!-- Favicon -->
     @php($logo=\App\Models\BusinessSetting::where(['key'=>'icon'])->first()->value)
-    <link rel="icon" type="image/x-icon" href="{{asset('storage/business/'.$logo??'')}}">
+    <link rel="icon" type="image/x-icon" href="{{asset('storage/app/public/business/'.$logo??'')}}">
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
     <!-- CSS Implementing Plugins -->
@@ -140,7 +140,7 @@
                 <a class="navbar-brand" href="{{route('admin.dashboard')}}" aria-label="">
                     <img class="" style="max-height: 48px; border-radius: 8px"
                          onerror="this.src='{{asset('assets/admin/img/160x160/img1.jpg')}}'"
-                         src="{{asset('storage/business/'.$store_logo)}}" alt="Logo">
+                         src="{{asset('storage/app/public/business/'.$store_logo)}}" alt="Logo">
                 </a>
             </div>
 
@@ -171,7 +171,7 @@
                                 <div class="avatar avatar-sm avatar-circle">
                                     <img class="avatar-img"
                                         onerror="this.src='{{asset('assets/admin/img/160x160/img1.jpg')}}'"
-                                        src="{{asset('storage/admin/'.auth('admin')->user()->image)}}"
+                                        src="{{asset('storage/app/public/admin/'.auth('admin')->user()->image)}}"
                                         alt="Image Description">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
@@ -185,7 +185,7 @@
                                         <div class="avatar avatar-sm avatar-circle mr-2">
                                             <img class="avatar-img"
                                                  onerror="this.src='{{asset('assets/admin/img/160x160/img1.jpg')}}'"
-                                                 src="{{asset('storage/admin/'.auth('admin')->user()->image)}}"
+                                                 src="{{asset('storage/app/public/admin/'.auth('admin')->user()->image)}}"
                                                  alt="Owner image">
                                         </div>
                                         <div class="media-body">
@@ -433,7 +433,7 @@
 @if ($errors->any())
     <script>
         @foreach($errors->all() as $error)
-        toastr.error('{{$error}}', Error, {
+        toastr.error('{{$error}}', 'Error', {
             CloseButton: true,
             ProgressBar: true
         });
