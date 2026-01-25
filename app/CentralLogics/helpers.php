@@ -645,7 +645,7 @@ class Helpers
         // Get URL content
         $result = curl_exec($ch);
         // close handle to release resources
-        curl_close($ch);
+        unset($ch);
 
         return $result;
     }
@@ -723,7 +723,7 @@ class Helpers
         // Get URL content
         $result = curl_exec($ch);
         // close handle to release resources
-        curl_close($ch);
+        unset($ch);
 
         return $result;
     }
@@ -1202,7 +1202,7 @@ class Helpers
             if (!Storage::disk('public')->exists($dir)) {
                 Storage::disk('public')->makeDirectory($dir);
             }
-            Storage::disk('public')->putFileAs($dir, $image, $imageName);
+            $image->storeAs($dir, $imageName, 'public');
         } else {
             $imageName = 'def.png';
         }
@@ -1267,19 +1267,56 @@ class Helpers
             }
             return true;
         } else if (auth('vendor_employee')->check()) {
-            $permission = auth('vendor_employee')->user()->role->modules;
-            if (isset($permission) && in_array($mod_name, (array) json_decode($permission)) == true) {
-                if ($mod_name == 'reviews') {
-                    return auth('vendor_employee')->user()->store->reviews_section;
-                } else if ($mod_name == 'deliveryman') {
-                    return auth('vendor_employee')->user()->store->self_delivery_system;
-                } else if ($mod_name == 'pos') {
-                    return auth('vendor_employee')->user()->store->pos_system;
-                } else if ($mod_name == 'addon') {
-                    return config('module.' . auth('vendor_employee')->user()->store->module->module_type)['add_on'];
+            //1 $permission = optional(optional(auth('vendor_employee')->user())->role)->modules ?? [];
+
+            // if (isset($permission) && in_array($mod_name, (array) json_decode($permission)) == true) {
+            //     if ($mod_name == 'reviews') {
+            //         return auth('vendor_employee')->user()->store->reviews_section;
+            //     } else if ($mod_name == 'deliveryman') {
+            //         return auth('vendor_employee')->user()->store->self_delivery_system;
+            //     } else if ($mod_name == 'pos') {
+            //         return auth('vendor_employee')->user()->store->pos_system;
+            //     } else if ($mod_name == 'addon') {
+            //         return config('module.' . auth('vendor_employee')->user()->store->module->module_type)['add_on'];
+            //     }
+            //     return true;
+            // }
+            //1
+            $employee = auth('vendor_employee')->user();
+
+            $permissions = [];
+
+            if (isset($permission)) {
+                if (is_string($permission)) {
+                    $permissions = json_decode($permission, true) ?? [];
+                } elseif (is_array($permission)) {
+                    $permissions = $permission;
                 }
+            }
+
+            if (in_array($mod_name, $permissions, true)) {
+
+                if ($mod_name === 'reviews') {
+                    return optional($employee->store)->reviews_section;
+                }
+
+                if ($mod_name === 'deliveryman') {
+                    return optional($employee->store)->self_delivery_system;
+                }
+
+                if ($mod_name === 'pos') {
+                    return optional($employee->store)->pos_system;
+                }
+
+                if ($mod_name === 'addon') {
+                    return config(
+                        'module.' . optional($employee->store->module)->module_type
+                    )['add_on'] ?? false;
+                }
+
                 return true;
             }
+            //1
         }
 
         return false;
@@ -1519,5 +1556,4 @@ class Helpers
     {
         return str_ireplace(['\'', '"', ',', ';', '<', '>', '?'], ' ', $str);
     }
-
 }

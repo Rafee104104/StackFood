@@ -118,13 +118,19 @@
     <header id="header"
             class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-flush navbar-container navbar-bordered">
         <div class="navbar-nav-wrap">
-            <div class="navbar-brand-wrapper" onclick="location.href='{{route('vendor.dashboard')}}'" style="cursor: pointer;font-weight: bold;font-size: 15px">
+            <script>
+                const storeDashboard = "{{route('vendor.dashboard')}}";
+            </script>
+            <div class="navbar-brand-wrapper" onclick="location.href=storeDashboard" style="cursor: pointer;font-weight: bold;font-size: 15px">
                 <!-- Logo Div-->
                 @php($store_data=\App\CentralLogics\Helpers::get_store_data())
+                <script>
+                    const storeLogo = "{{asset('storage/store/'.$store_data->logo)}}";
+                </script>
                 <a class="navbar-brand" href="{{route('vendor.dashboard')}}" aria-label="Front" style="padding-top: 0!important;padding-bottom: 0!important;">
                     <img class="navbar-brand-logo"
                          style="border-radius: 50%;height: 55px;width: 55px!important; border: 5px solid #80808012"
-                         onerror="this.src='{{asset('assets/admin/img/160x160/img2.jpg')}}'"
+                         onerror="this.src=storeLogo"
                          src="{{asset('storage/store/'.$store_data->logo)}}"
                          alt="Logo">
                 </a>
@@ -156,8 +162,11 @@
                                      "type": "css-animation"
                                    }'>
                                 <div class="avatar avatar-sm avatar-circle">
+                                    <script>
+                                        const storeImage = "{{asset('assets/admin/img/160x160/img1.jpg')}}";
+                                    </script>
                                     <img class="avatar-img"
-                                        onerror="this.src='{{asset('assets/admin/img/160x160/img1.jpg')}}'"
+                                        onerror="this.src=storeImage"
                                         src="{{asset('storage/vendor')}}/{{\App\CentralLogics\Helpers::get_loggedin_user()->image}}"
                                         alt="Image Description">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
@@ -170,8 +179,11 @@
                                 <div class="dropdown-item-text">
                                     <div class="media align-items-center">
                                         <div class="avatar avatar-sm avatar-circle mr-2">
+                                            <script>
+                                                const storeImage1 = "{{asset('assets/admin/img/160x160/img1.jpg')}}";
+                                            </script>
                                             <img class="avatar-img"
-                                                 onerror="this.src='{{asset('assets/admin/img/160x160/img1.jpg')}}'"
+                                                 onerror="this.src=storeImage1"
                                                  src="{{asset('storage/vendor')}}/{{\App\CentralLogics\Helpers::get_loggedin_user()->image}}"
                                                  alt="Owner image">
                                         </div>
@@ -200,7 +212,7 @@
                                     denyButtonText: `Don't Logout`,
                                     }).then((result) => {
                                     if (result.value) {
-                                    location.href='{{route('vendor.auth.logout')}}';
+                                    location.href="{{route('vendor.auth.logout')}}";
                                     } else{
                                     Swal.fire('Canceled', '', 'info')
                                     }
@@ -278,7 +290,7 @@
                         <div class='w-100' id="cart">
                             @include('vendor-views.pos._cart')
                         </div>
-                    </div> 
+                    </div>
 				</div>
 			</div>
 		</div><!-- container //  -->
@@ -405,7 +417,7 @@
     }
     function quickView(product_id) {
         $.get({
-            url: '{{route('vendor.pos.quick-view')}}',
+            url: "{{route('vendor.pos.quick-view')}}",
             dataType: 'json',
             data: {
                 product_id: product_id
@@ -426,7 +438,7 @@
 
     function quickViewCartItem(product_id, item_key) {
         $.get({
-            url: '{{route('vendor.pos.quick-view-cart-item')}}',
+            url: "{{route('vendor.pos.quick-view-cart-item')}}",
             dataType: 'json',
             data: {
                 product_id: product_id,
@@ -553,7 +565,7 @@
             });
             $.ajax({
                 type: "POST",
-                url: '{{ route('vendor.pos.variant_price') }}',
+                url: "{{ route('vendor.pos.variant_price') }}",
                 data: $('#add-to-cart-form').serializeArray(),
                 success: function (data) {
                     $('#add-to-cart-form #chosen_price_div').removeClass('d-none');
@@ -571,7 +583,7 @@
                 }
             });
             $.post({
-                url: '{{ route('vendor.pos.add-to-cart') }}',
+                url: "{{ route('vendor.pos.add-to-cart') }}",
                 data: $('#' + form_id).serializeArray(),
                 beforeSend: function () {
                     $('#loading').show();
@@ -584,7 +596,7 @@
                             text: "{{translate('messages.product_already_added_in_cart')}}"
                         });
                         return false;
-                    } 
+                    }
                     else if (data.data == 2) {
                         updateCart();
                         Swal.fire({
@@ -592,9 +604,9 @@
                             title: 'Cart',
                             text: "{{translate('messages.product_has_been_updated_in_cart')}}"
                         });
-                        
+
                         return false;
-                    } 
+                    }
                     else if (data.data == 0) {
                         Swal.fire({
                             icon: 'error',
@@ -605,7 +617,7 @@
                     }
                     $('.call-when-done').click();
 
-                    toastr.success('{{translate('messages.product_has_been_added_in_cart')}}', {
+                    toastr.success("{{translate('messages.product_has_been_added_in_cart')}}", {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -626,7 +638,7 @@
     }
 
     function removeFromCart(key) {
-        $.post('{{ route('vendor.pos.remove-from-cart') }}', {_token: '{{ csrf_token() }}', key: key}, function (data) {
+        $.post("{{ route('vendor.pos.remove-from-cart') }}", {_token: '{{ csrf_token() }}', key: key}, function (data) {
             if (data.errors) {
                 for (var i = 0; i < data.errors.length; i++) {
                     toastr.error(data.errors[i].message, {
@@ -636,7 +648,7 @@
                 }
             } else {
                 updateCart();
-                toastr.info('{{translate('messages.item_has_been_removed_from_cart')}}', {
+                toastr.info("{{translate('messages.item_has_been_removed_from_cart')}}", {
                     CloseButton: true,
                     ProgressBar: true
                 });
@@ -646,7 +658,7 @@
     }
 
     function emptyCart() {
-        $.post('{{ route('vendor.pos.emptyCart') }}', {_token: '{{ csrf_token() }}'}, function (data) {
+        $.post("{{ route('vendor.pos.emptyCart') }}", {_token: '{{ csrf_token() }}'}, function (data) {
             updateCart();
             toastr.info('Item has been removed from cart', {
                 CloseButton: true,
@@ -674,7 +686,7 @@
 
         var key = element.data('key');
         if (valueCurrent >= minValue) {
-            $.post('{{ route('vendor.pos.updateQuantity') }}', {_token: '{{ csrf_token() }}', key: key, quantity:valueCurrent}, function (data) {
+            $.post("{{ route('vendor.pos.updateQuantity') }}", {_token: '{{ csrf_token() }}', key: key, quantity:valueCurrent}, function (data) {
                 updateCart();
             });
         } else {
@@ -685,7 +697,7 @@
             });
             element.val(element.data('oldValue'));
         }
-    
+
 
         // Allow: backspace, delete, tab, escape, enter and .
         if(e.type == 'keydown')
@@ -714,7 +726,7 @@
 
     $('.js-data-example-ajax').select2({
         ajax: {
-            url: '{{route('vendor.pos.customers')}}',
+            url: "{{route('vendor.pos.customers')}}",
             data: function (params) {
                 return {
                     q: params.term, // search term
@@ -746,8 +758,22 @@
 
 </script>
 <!-- IE Support -->
-<script>
-    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('public/assets/admin')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
-</script>
+    <div id="ie-polyfill"
+        data-polyfill-src="{{ asset('public/assets/admin/vendor/babel-polyfill/polyfill.min.js') }}">
+    </div>
+
+    <script>
+        (function() {
+            if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+                const el = document.getElementById('ie-polyfill');
+                const src = el.getAttribute('data-polyfill-src');
+
+                const script = document.createElement('script');
+                script.src = src;
+                document.head.appendChild(script);
+            }
+        })();
+    </script>
+
 </body>
 </html>

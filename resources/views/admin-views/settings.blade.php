@@ -83,24 +83,28 @@
                     <!-- Avatar -->
 
                     <label
-                        class="avatar avatar-xxl avatar-circle avatar-border-lg avatar-uploader profile-cover-avatar"
-                        for="avatarUploader">
-                        @php
-                        $err = "this.src='{{asset("assets/admin/img/160x160/img1.jpg")}}'";
-                        @endphp
-                        <img id="viewer"
-                            onerror="{{$err}}"
-                            class="avatar-img"
-                            src="{{asset('storage/admin')}}/{{auth('admin')->user()->image}}"
-                            alt="Image">
+    class="avatar avatar-xxl avatar-circle avatar-border-lg avatar-uploader profile-cover-avatar"
+    for="avatarUploader">
+    <script>
+        var x = '{{asset("assets/admin/img/160x160/img1.jpg")}}';
+    </script>
+    <img id="viewer"
+        class="avatar-img"
+        src="{{ asset('storage/admin/' . auth('admin')->user()->image) }}"
+        onerror="this.src=x"
+        alt="Image">
 
-                        <input type="file" name="image" class="js-file-attach avatar-uploader-input"
-                            id="customFileEg1"
-                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                        <label class="avatar-uploader-trigger" for="customFileEg1">
-                            <i class="tio-edit avatar-uploader-icon shadow-soft"></i>
-                        </label>
-                    </label>
+    <input type="file"
+        name="image"
+        class="js-file-attach avatar-uploader-input"
+        id="customFileEg1"
+        accept=".jpg,.png,.jpeg,.gif,.bmp,.tif,.tiff,image/*">
+
+    <label class="avatar-uploader-trigger" for="customFileEg1">
+        <i class="tio-edit avatar-uploader-icon shadow-soft"></i>
+    </label>
+</label>
+
                     <!-- End Avatar -->
                 </div>
                 <!-- End Card -->
@@ -159,9 +163,12 @@
                                     placeholder="{{translate('messages.enter_new_email_address')}}" aria-label="{{translate('messages.enter_new_email_address')}}">
                             </div>
                         </div>
-
+                    <script>
+                        var a = "form_alert(\'admin-settings-form\',\'Want to update admin info ?\')':'call_demo()";
+                        var mode = "{{$mode!='demo'? }}";
+                    </script>
                         <div class="d-flex justify-content-end">
-                            <button type="button" onclick="{{$mode!='demo'?'form_alert(\'admin-settings-form\',\'Want to update admin info ?\')':'call_demo()'}}" class="btn btn-primary">{{translate('messages.save')}}</button>
+                            <button type="button" onclick="{{mode}}" class="btn btn-primary">{{translate('messages.save')}}</button>
                         </div>
 
                         <!-- End Form -->

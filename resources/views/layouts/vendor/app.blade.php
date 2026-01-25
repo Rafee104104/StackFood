@@ -6,7 +6,7 @@
     <!-- Title -->
     <title>@yield('title')</title>
     <!-- Favicon -->
-    @php($logo=\App\Models\BusinessSetting::where(['key'=>'icon'])->first()->value)
+    @php($logo=optional(\App\Models\BusinessSetting::where(['key'=>'icon'])->first())->value)
     <link rel="shortcut icon" href="">
     <link rel="icon" type="image/x-icon" href="{{asset('storage/business/'.$logo??'')}}">
     <!-- Font -->
@@ -297,30 +297,46 @@
         audio.pause();
     }
 </script>
+
+   @if(\App\CentralLogics\Helpers::employee_module_permission_check('order'))
 <script>
-    @if(\App\CentralLogics\Helpers::employee_module_permission_check('order'))
     var order_type = 'all';
+    var popupOpen = false;
+
     setInterval(function () {
         $.get({
-            url: '{{route('vendor.get-store-data')}}',
+            url: "{{ route('vendor.get-store-data') }}",
             dataType: 'json',
             success: function (response) {
+                if (!response || !response.data || popupOpen) return;
+
                 let data = response.data;
+
                 if (data.new_pending_order > 0) {
                     order_type = 'pending';
-                    playAudio();
-                    $('#popup-modal').appendTo("body").modal('show');
+                    showPopup();
                 }
-                else if(data.new_confirmed_order > 0)
-                {
+                else if (data.new_confirmed_order > 0) {
                     order_type = 'confirmed';
-                    playAudio();
-                    $('#popup-modal').appendTo("body").modal('show');
+                    showPopup();
                 }
-            },
+            }
         });
     }, 10000);
-    @endif
+
+    function showPopup() {
+        popupOpen = true;
+        playAudio();
+        $('#popup-modal').appendTo('body').modal('show');
+
+        $('#popup-modal').one('hidden.bs.modal', function () {
+            popupOpen = false;
+        });
+    }
+</script>
+@endif
+
+    <script>
     function check_order() {
         location.href = '{{url('/')}}/vendor-panel/order/list/'+order_type;
     }
@@ -377,9 +393,13 @@
     }
 </script>
 
-<!-- IE Support -->
 <script>
-    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('assets/admin/vendor/babel-polyfill/polyfill.min.js')}}"><\/script>');
+    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+        var script = document.createElement('script');
+        script.src = "{{ asset('assets/admin/vendor/babel-polyfill/polyfill.min.js') }}";
+        document.head.appendChild(script);
+    }
 </script>
+
 </body>
 </html>

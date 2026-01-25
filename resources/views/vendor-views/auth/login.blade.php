@@ -114,7 +114,7 @@
                                 </div>
                                 <!-- End Checkbox -->
 
-                                {{-- recaptcha --}}
+                                <!-- 1 {{-- recaptcha --}}
                                 @php($recaptcha = \App\CentralLogics\Helpers::get_business_settings('recaptcha'))
                                 @if(isset($recaptcha) && $recaptcha['status'] == 1)
                                     <div id="recaptcha_element" style="width: 100%;" data-type="image"></div>
@@ -133,7 +133,7 @@
                                                 style="width: 100%; border-radius: 4px;" />
                                         </div>
                                     </div>
-                                @endif
+                                @endif -->
 
                                 <button type="submit" class="btn btn-lg btn-block btn-primary">Sign in</button>
                                 <div class="text-center">
@@ -203,7 +203,7 @@
                                 </div>
                                 <!-- End Checkbox -->
 
-                                {{-- recaptcha --}}
+                                <!-- 1 {{-- recaptcha --}}
                                 @php($recaptcha = \App\CentralLogics\Helpers::get_business_settings('recaptcha'))
                                 @if(isset($recaptcha) && $recaptcha['status'] == 1)
                                     <div id="recaptcha_element2" style="width: 100%;" data-type="image"></div>
@@ -223,7 +223,7 @@
                                                 style="width: 100%; border-radius: 4px;" />
                                         </div>
                                     </div>
-                                @endif
+                                @endif -->
 
                                 <button type="submit"
                                     class="btn btn-lg btn-block btn-primary">{{translate('messages.sine_in')}}</button>
@@ -326,18 +326,18 @@
         });
     </script>
 
-    {{-- recaptcha scripts start --}}
+    <!-- 1 {{-- recaptcha scripts start --}}
     @if(isset($recaptcha) && $recaptcha['status'] == 1)
         <script type="text/javascript">
             var onloadCallback = function () {
                 grecaptcha.render('recaptcha_element', {
-                    'sitekey': '{{ env('SITE_KEY') }}'
+                    'sitekey': '{{ env("SITE_KEY") }}'
                 });
             };
 
             var onloadCallback2 = function () {
                 grecaptcha.render('recaptcha_element2', {
-                    'sitekey': '{{ env('SITE_KEY') }}'
+                    'sitekey': '{{ env("SITE_KEY") }}'
                 });
             };
 
@@ -364,7 +364,7 @@
             });
         </script>
     @endif
-    {{-- recaptcha scripts end --}}
+    {{-- recaptcha scripts end --}} -->
 
 
     @if(env('APP_MODE') == 'demo')

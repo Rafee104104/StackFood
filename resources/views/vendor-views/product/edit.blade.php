@@ -273,7 +273,7 @@
                 <div class="col-lg-2 col-md-4 col-sm-4 col-6">
                     <div class="card">
                         <div class="card-body">
-                            @php($s1=this.setCustomValidity('{{ translate('messages.please_select_store') }}'))
+                            @php($s1=this.setCustomValidity("{{ translate('messages.please_select_store') }}"))
                             <img style="width:100%; height:auto;"
                                 src="{{ asset('storage/product/' . $photo) }}"
                                 onerror="{s1}"

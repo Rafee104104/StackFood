@@ -76,7 +76,7 @@
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">{{isset($addon)?translate('messages.update'):translate('messages.add')}}</button>
                     </div>
-                    
+
                 </form>
             </div>
         </div>
@@ -86,7 +86,7 @@
                 <h5 class="card-header-title"> {{translate('messages.addon')}} {{translate('messages.list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$addons->total()}}</span></h5>
                 <div class="col-sm-auto" style="width: 306px;">
                     <select name="store_id" id="store" onchange="set_store_filter('{{route('admin.addon.add-new')}}',this.value)" data-placeholder="{{translate('messages.select')}} {{translate('messages.store')}}" class="js-data-example-ajax form-control"   title="Select Restaurant">
-                    @if(isset($store))    
+                    @if(isset($store))
                     <option value="{{$store->id}}" selected>{{$store->name}}</option>
                     @else
                     <option value="all" selected>{{translate('messages.all_stores')}}</option>
@@ -173,7 +173,7 @@
                                         <!-- End Checkbox Switch -->
                                     </div>
 
-                                
+
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="mr-2">{{translate('messages.status')}}</span>
 
@@ -186,7 +186,7 @@
                                         </label>
                                         <!-- End Checkbox Switch -->
                                     </div>
-                                    
+
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="mr-2">{{translate('messages.action')}}</span>
 
@@ -236,7 +236,7 @@
                                 </td>
                                 <td>{{\App\CentralLogics\Helpers::format_currency($addon['price'])}}</td>
                                 <td>{{Str::limit($addon->store?$addon->store->name:translate('messages.store').' '.translate('messages.deleted'),25,'...')}}</td>
-                                <td>    
+                                <td>
                                     <label class="toggle-switch toggle-switch-sm" for="stausCheckbox{{$addon->id}}">
                                     <input type="checkbox" onclick="location.href='{{route('admin.addon.status',[$addon['id'],$addon->status?0:1])}}'"class="toggle-switch-input" id="stausCheckbox{{$addon->id}}" {{$addon->status?'checked':''}}>
                                         <span class="toggle-switch-label">
@@ -262,7 +262,7 @@
             </div>
             <div class="card-footer">
                 <!-- Pagination -->
-                <div class="row justify-content-center justify-content-sm-between align-items-sm-center page-area"> 
+                <div class="row justify-content-center justify-content-sm-between align-items-sm-center page-area">
                     <div class="col-sm-auto">
                         <div class="d-flex justify-content-center justify-content-sm-end">
                             <!-- Pagination -->

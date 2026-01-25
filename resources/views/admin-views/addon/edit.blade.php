@@ -7,7 +7,7 @@
 @endpush
 
 @section('content')
-@php($s=this.setCustomValidity('{{ translate('messages.please_select_store') }}'))
+@php($s=this.setCustomValidity("{{ translate('messages.please_select_store') }}"))
 <div class="content container-fluid">
     <!-- Page Header -->
     <div class="page-header">

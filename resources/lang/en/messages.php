@@ -1310,4 +1310,5 @@
   'Paid by' => 'Paid by',
   'password_mismatch' => 'Password did,t match!',
   'Enter order verification code' => 'Enter order verification code',
+  'Your browser doesn,t support geolocation' => 'Your browser doesn t support geolocation',
 );
