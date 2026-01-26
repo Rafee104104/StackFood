@@ -58,6 +58,14 @@ Route::get('authentication-failed', function () {
     ], 401);
 })->name('authentication-failed');
 
+// ================= Admin Dashboard file Vendor-view POS order =================
+use App\Http\Controllers\Vendor\OrderController;
+
+Route::post('/vendor/orders/add-delivery-man',
+    [OrderController::class, 'addDeliveryMan']
+)->name('vendor.orders.add-delivery-man');
+
+
 // ================= PAYMENT MOBILE =================
 Route::prefix('payment-mobile')->group(function () {
     Route::get('/', [PaymentController::class, 'payment'])->name('payment-mobile');
@@ -159,4 +167,4 @@ Route::prefix('deliveryman')->name('deliveryman.')->group(function () {
 
 Route::group(['prefix'=> 'admin'], function () {
     require base_path('routes/admin.php');
-}); 
+});

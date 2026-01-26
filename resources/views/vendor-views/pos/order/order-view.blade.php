@@ -79,9 +79,9 @@
                             @elseif ($order['order_status']=='confirmed' || $order['order_status']=='accepted')
                             <a class="btn btn-sm btn-primary" onclick="order_status_change_alert('{{route('vendor.order.status',['id'=>$order['id'],'order_status'=>'processing'])}}','Change status to cooking ?')" href="javascript:">{{translate('messages.Proceed_for_cooking')}}</a>
                             @elseif ($order['order_status']=='processing')
-                            <a class="btn btn-sm btn-primary" onclick="order_status_change_alert('{{route('vendor.order.status',['id'=>$order['id'],'order_status'=>'handover'])}}','Change status to ready for handover ?')" href="javascript:">{{translate('messages.make_ready_for_handover')}}</a>    
+                            <a class="btn btn-sm btn-primary" onclick="order_status_change_alert('{{route('vendor.order.status',['id'=>$order['id'],'order_status'=>'handover'])}}','Change status to ready for handover ?')" href="javascript:">{{translate('messages.make_ready_for_handover')}}</a>
                             @elseif ($order['order_status']=='handover' && $order['order_type']=='take_away')
-                            <a class="btn btn-sm btn-primary" onclick="order_status_change_alert('{{route('vendor.order.status',['id'=>$order['id'],'order_status'=>'delivered'])}}','Change status to delivered (payment status will be paid if not) ?', {{$order_delivery_verification?'true':'false'}})" href="javascript:">{{translate('messages.maek_delivered')}}</a>    
+                            <a class="btn btn-sm btn-primary" onclick="order_status_change_alert('{{route('vendor.order.status',['id'=>$order['id'],'order_status'=>'delivered'])}}','Change status to delivered (payment status will be paid if not) ?', {{$order_delivery_verification?'true':'false'}})" href="javascript:">{{translate('messages.maek_delivered')}}</a>
                             @endif
                         </div>
                         <!-- End Unfold -->
@@ -203,7 +203,7 @@
                             @php($sub_total+=$amount)
                             <!-- End Media -->
                                 <hr>
-                        
+
                         @elseif($detail->campaign)
                             <!-- Media -->
                                 <div class="media">
@@ -315,9 +315,9 @@
                     <!-- End Header -->
 
                     <!-- Body -->
-                    
+
                     <div class="card-body">
-                    @if($order->delivery_man)    
+                    @if($order->delivery_man)
                         <div class="media align-items-center" href="javascript:">
                             <div class="avatar avatar-circle mr-3">
                                 <img
@@ -363,7 +363,7 @@
                             <li>
                                 <a class="deco-none" href="tel:{{$order->delivery_man['phone']}}">
                                     <i class="tio-android-phone-vs mr-2"></i>
-                                {{$order->delivery_man['phone']}}</a> 
+                                {{$order->delivery_man['phone']}}</a>
                             </li>
                         </ul>
 
@@ -390,9 +390,9 @@
                         <span class="d-block text-lowercase qcont">
                                 {{translate('messages.deliveryman').' '.translate('messages.not_found')}}
                         </span>
-                    @endif    
+                    @endif
                     </div>
-                    
+
                 <!-- End Body -->
                 </div>
                 <!-- End Card -->
@@ -406,9 +406,9 @@
                     <!-- End Header -->
 
                     <!-- Body -->
-                    
+
                         <div class="card-body">
-                        @if($order->customer)    
+                        @if($order->customer)
                             <div class="media align-items-center" href="javascript:">
                                 <div class="avatar avatar-circle mr-3">
                                     <img
@@ -491,9 +491,9 @@
                         <span class="d-block text-lowercase qcont text-center">
                             {{translate('messages.walk_in_customer')}}
                         </span>
-                        @endif    
+                        @endif
                         </div>
-                
+
                 <!-- End Body -->
                 </div>
                 <!-- End Card -->
@@ -672,28 +672,73 @@
                         location.href = route;
                     }
                 })
-            }   
+            }
         }
+        </script>
+        <script>
+    <button
+    id="assignDeliveryManBtn"
+    data-order-id="{{ $order->id }}"
+    data-add-delivery-url="{{ route('vendor.orders.add-delivery-man') }}"
+    >
+    Assign Delivery Man
+    </button>
+        function addDeliveryMan(deliveryManId) {
+    const btn = document.getElementById('assignDeliveryManBtn');
 
-        function addDeliveryMan(id) {
-            $.ajax({
-                type: "GET",
-                url: '{{url('/')}}/vendor/orders/add-delivery-man/{{$order['id']}}/' + id,
-                data: $('#product_form').serialize(),
-                success: function (data) {
-                    toastr.success('Successfully added', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                },
-                error: function () {
-                    toastr.error('Add valid data', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
+    const orderId = btn.dataset.orderId;
+    const url = btn.dataset.addDeliveryUrl;
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            _token: document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute('content'),
+            order_id: orderId,
+            delivery_man_id: deliveryManId
+        },
+        success: function () {
+            toastr.success('Successfully added', {
+                CloseButton: true,
+                ProgressBar: true
+            });
+        },
+        error: function () {
+            toastr.error('Add valid data', {
+                CloseButton: true,
+                ProgressBar: true
             });
         }
+    });
+}
+</script>
+    <script>
+//         function addDeliveryMan(deliveryManId) {
+//     $.ajax({
+//         type: "POST",
+//         url: ORDER_CONFIG.addDeliveryManUrl,
+//         data: {
+//             _token: "{{ csrf_token() }}",
+//             order_id: ORDER_CONFIG.orderId,
+//             delivery_man_id: deliveryManId
+//         },
+//         success: function () {
+//             toastr.success('Successfully added', {
+//                 CloseButton: true,
+//                 ProgressBar: true
+//             });
+//         },
+//         error: function () {
+//             toastr.error('Add valid data', {
+//                 CloseButton: true,
+//                 ProgressBar: true
+//             });
+//         }
+//     });
+// }
+
 
         function last_location_view() {
             toastr.warning('Only available when order is out for delivery!', {

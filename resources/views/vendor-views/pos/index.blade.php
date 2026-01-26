@@ -355,7 +355,7 @@
 @if ($errors->any())
     <script>
         @foreach($errors->all() as $error)
-        toastr.error('{{$error}}', Error, {
+        toastr.error('{{$error}}', 'Error', {
             CloseButton: true,
             ProgressBar: true
         });
@@ -374,11 +374,14 @@
 </script>
 <!-- JS Plugins Init. -->
 <script>
-    $(document).on('ready', function () {
-        @if($order)
-        $('#print-invoice').modal('show');
+    $(function () {
+        @if ($order)
+            if ($('#print-invoice').length) {
+                $('#print-invoice').modal('show');
+            }
         @endif
     });
+
     function printDiv(divName) {
         var printContents = document.getElementById(divName).innerHTML;
         var originalContents = document.body.innerHTML;

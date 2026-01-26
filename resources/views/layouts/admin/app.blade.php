@@ -19,7 +19,6 @@
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="{{asset('assets/admin/css/theme.minc619.css')}}">
     @stack('css_or_js')
-
     <style>
         :root {
             --theameColor: #045cff;
@@ -427,7 +426,7 @@
             {
                 location.href = "{{route('admin.order.list',['status'=>'all'])}}";
             }
-            
+
         }
         @endif
     @endif
@@ -472,7 +471,7 @@
 
         location.href = nurl;
     }
-    
+
     function set_store_filter(url, id) {
         var nurl = new URL(url);
         nurl.searchParams.set('store_id', id);
@@ -489,7 +488,7 @@
         /* Copy the text inside the text field */
         navigator.clipboard.writeText(copyText);
 
-        toastr.success('{{translate('messages.text_copied')}}', {
+        toastr.success("{{translate('messages.text_copied')}}", {
             CloseButton: true,
             ProgressBar: true
         });
@@ -505,9 +504,13 @@
     }
 </script>
 
-<!-- IE Support -->
 <script>
-    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('assets/admin/vendor/babel-polyfill/polyfill.min.js')}}"><\/script>');
+    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+        var s = document.createElement('script');
+        s.src = "{{ asset('assets/admin/vendor/babel-polyfill/polyfill.min.js') }}";
+        document.head.appendChild(s);
+    }
 </script>
+
 </body>
 </html>

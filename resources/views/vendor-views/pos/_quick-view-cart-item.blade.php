@@ -12,7 +12,7 @@
         height: 7rem;
         width: 7rem;
     }
-    .addon-quantity-input{        
+    .addon-quantity-input{
         height: 2rem;
         width: 7rem;
         z-index: 9;
@@ -46,9 +46,12 @@
         @endif
         <!-- Product gallery-->
         <div class="d-flex align-items-center justify-content-center active" style="height:9.5rem;">
+            <script>
+                const img ="{{asset('assets/admin/img/160x160/img2.jpg')}}";
+            </script>
             <img class="img-responsive" style="height:100%;width:auto;overflow:hidden;border-radius: 5%;"
-                src="{{asset('storage/product')}}/{{$product['image']}}" 
-                onerror="this.src='{{asset('assets/admin/img/160x160/img2.jpg')}}'"
+                src="{{asset('storage/product')}}/{{$product['image']}}"
+                onerror="this.src=img"
                     data-zoom="{{asset('storage/product')}}/{{$product['image']}}"
                     alt="Product image" width="">
             <div class="cz-image-zoom-pane"></div>
@@ -134,7 +137,7 @@
                 @if(count($add_ons)>0)
                 <div class="h3 p-0 pt-2">{{ translate('messages.addon') }}
                 </div>
-                
+
                 <div class="d-flex justify-content-left flex-wrap">
                 @foreach (\App\Models\AddOn::whereIn('id', $add_ons)->active()->get() as $key => $add_on)
                     <div class="flex-column pb-2">
@@ -143,7 +146,7 @@
                                 id="addon{{ $key }}" onchange="addon_quantity_input_toggle(event)"
                                 name="addon_id[]" value="{{ $add_on->id }}" {{in_array( $add_on->id, $cart_item['add_ons'])?'checked':''}}
                                 autocomplete="off">
-                        <label class="d-flex align-items-center btn btn-sm check-label mx-1 addon-input text-break" 
+                        <label class="d-flex align-items-center btn btn-sm check-label mx-1 addon-input text-break"
                             for="addon{{ $key }}">{{ Str::limit($add_on->name, 20, '...') }} <br> {{ \App\CentralLogics\Helpers::format_currency($add_on->price) }}</label>
                         <label class="input-group addon-quantity-input mx-1 shadow bg-white rounded px-1" for="addon{{ $key }}" @if(in_array( $add_on->id, $cart_item['add_ons'])) style="visibility:visible;" @endif>
                             <button class="btn btn-sm h-100 text-dark px-0" type="button" onclick="this.parentNode.querySelector('input[type=number]').stepDown(), getVariantPrice()"><i class="tio-remove  font-weight-bold"></i></button>

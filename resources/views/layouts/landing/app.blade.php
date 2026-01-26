@@ -25,6 +25,9 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/landing/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/landing/css/responsive.css') }}" />
+
+
+    @stack('scripts')
     <title>@yield('title')</title>
     <style>
         html,
@@ -66,8 +69,11 @@
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
                 @php($logo = \App\CentralLogics\Helpers::get_settings('logo'))
+                <script>
+                    const logo1 = "{{ asset('assets/admin/img/160x160/img2.jpg') }}";
+                </script>
                 <img class="img-fluid w-100 logo"
-                    onerror="this.src='{{ asset('assets/admin/img/160x160/img2.jpg') }}'"
+                    onerror="this.src=logo1"
                     src="{{ asset('storage/business/' . $logo) }}" alt="StackFood">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -146,8 +152,11 @@
                     col-md-3 @endif">
                     <a class="navbar-brand" href="{{ url('/') }}">
                         @php($logo = \App\CentralLogics\Helpers::get_settings('logo'))
+                        <script>
+                            const logo = " {{ asset('assets/admin/img/160x160/img2.jpg') }}";
+                        </script>
                         <img style="max-width: 200px; max-height: 60px;" class="img-fluid"
-                            onerror="this.src='{{ asset('assets/admin/img/160x160/img2.jpg') }}'"
+                            onerror="this.src=logo"
                             src="{{ asset('storage/business/' . $logo) }}" alt="Image">
                     </a>
                     <p class="paragraph">
