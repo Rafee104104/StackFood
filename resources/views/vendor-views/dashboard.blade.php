@@ -250,7 +250,7 @@
                 }
             });
             $.post({
-                url: '{{route('vendor.dashboard.order-stats')}}',
+                url: "{{route('vendor.dashboard.order-stats')}}",
                 data: {
                     statistics_type: type
                 },

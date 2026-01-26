@@ -288,8 +288,8 @@
 
     @if ($errors->any())
     <script>
-        @foreach($errors - > all() as $error)
-        toastr.error('{{$error}}', Error, {
+        @foreach($errors->all() as $error)
+        toastr.error('{{$error}}', 'Error', {
             CloseButton: true,
             ProgressBar: true
         });
@@ -384,10 +384,13 @@
     </script>
     @endif
     <!-- IE Support -->
-    <script>
-        if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('
-            public / assets / admin ')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
-    </script>
+<script>
+    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+        document.write('<script src="{{ asset("public/assets/admin/vendor/babel-polyfill/polyfill.min.js") }}"><\/script>');
+    }
+</script>
+
+
 </body>
 
 </html>
