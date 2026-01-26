@@ -25,13 +25,16 @@
     <!-- ========== MAIN CONTENT ========== -->
     <main id="content" role="main" class="main">
         <div class="position-fixed top-0 right-0 left-0 bg-img-hero"
-            style="height: 100%; background-image: url({{asset('public/assets/admin')}}/svg/components/login-background.png);">
+            style="height: 100%; background-image: url('{{asset('public/assets/admin')}}/svg/components/login-background.png');">
         </div>
         @php($systemlogo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
         <!-- Content -->
         <div class="container py-5 py-sm-7">
             <a class="d-flex justify-content-center mb-5" href="javascript:">
-                <img class="z-index-2" onerror="this.src='{{asset('assets/admin/img/160x160/img2.jpg')}}'"
+                <script>
+                    const img = "{{asset('assets/admin/img/160x160/img2.jpg')}}";
+                </script>
+                <img class="z-index-2" onerror="this.src=img"
                     src="{{asset('storage/app/public/business/' . $systemlogo)}}" alt="Image Description"
                     style="max-height: 100px;max-width: 300px">
             </a>
@@ -44,7 +47,8 @@
                             <div class="text-center">
                                 <div class="mb-5">
                                     <h1 class="display-4">{{translate('messages.store')}}
-                                        {{translate('messages.sign_in')}}</h1>
+                                        {{translate('messages.sign_in')}}
+                                    </h1>
                                     <p>{{translate('messages.want_to_login_your_admin_account')}}
                                         <a href="{{route('admin.auth.login')}}">
                                             {{translate('messages.admin_login')}}
@@ -129,7 +133,7 @@
                                                 autocomplete="off">
                                         </div>
                                         <div class="col-6" style="background-color: #FFFFFF; border-radius: 5px;">
-                                            <img src="<?php    echo $custome_recaptcha->inline(); ?>"
+                                            <img src="<?php echo $custome_recaptcha->inline(); ?>"
                                                 style="width: 100%; border-radius: 4px;" />
                                         </div>
                                     </div>
@@ -148,7 +152,7 @@
                                 <div class="text-center">
                                     <div class="m-2">
                                         <span
-                                            class="divider text-muted m-4">{{{translate('messages.store_employee_login_form')}}}</span>
+                                            class="divider text-muted m-4">{{translate('messages.store_employee_login_form')}}</span>
                                     </div>
                                 </div>
                                 <!-- Form Group -->
@@ -219,7 +223,7 @@
                                                 autocomplete="off">
                                         </div>
                                         <div class="col-6" style="background-color: #FFFFFF; border-radius: 5px;">
-                                            <img src="<?php    echo $custome_recaptcha->inline(); ?>"
+                                            <img src="<?php echo $custome_recaptcha->inline(); ?>"
                                                 style="width: 100%; border-radius: 4px;" />
                                         </div>
                                     </div>
@@ -250,19 +254,19 @@
                         </div>
 
                         @if(env('APP_MODE') == 'demo')
-                            <div class="card-footer">
-                                <div class="row">
-                                    <div class="col-10">
-                                        <span class="badge badge-soft-info">Restaurant Owner login credential.</span><br>
-                                        <span>Email : test.restaurant@gmail.com</span><br>
-                                        <span>Password : 12345678</span>
-                                    </div>
-                                    <div class="col-2">
-                                        <button class="btn btn-primary" onclick="copy_cred()"><i class="tio-copy"></i>
-                                        </button>
-                                    </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-10">
+                                    <span class="badge badge-soft-info">Restaurant Owner login credential.</span><br>
+                                    <span>Email : test.restaurant@gmail.com</span><br>
+                                    <span>Password : 12345678</span>
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" onclick="copy_cred()"><i class="tio-copy"></i>
+                                    </button>
                                 </div>
                             </div>
+                        </div>
                         @endif
                     </div>
                     <!-- End Card -->
@@ -283,41 +287,41 @@
     {!! Toastr::message() !!}
 
     @if ($errors->any())
-        <script>
-            @foreach($errors->all() as $error)
-                toastr.error('{{$error}}', Error, {
-                    CloseButton: true,
-                    ProgressBar: true
-                });
-            @endforeach
-        </script>
+    <script>
+        @foreach($errors - > all() as $error)
+        toastr.error('{{$error}}', Error, {
+            CloseButton: true,
+            ProgressBar: true
+        });
+        @endforeach
+    </script>
     @endif
 
     <!-- JS Plugins Init. -->
     <script>
-        $(document).on('ready', function () {
+        $(document).on('ready', function() {
             // INITIALIZATION OF SHOW PASSWORD
             // =======================================================
-            $('.js-toggle-password').each(function () {
+            $('.js-toggle-password').each(function() {
                 new HSTogglePassword(this).init()
             });
 
             // INITIALIZATION OF FORM VALIDATION
             // =======================================================
-            $('.js-validate').each(function () {
+            $('.js-validate').each(function() {
                 $.HSCore.components.HSValidation.init($(this));
             });
             // $('#employee_login_form').hide();
             // $('#vendor_login_form').hide();
         });
-        $('#owner_sign_in').on('click', function () {
+        $('#owner_sign_in').on('click', function() {
             $('.signIn').hide();
             $('#employee_login_form').hide();
             $(this).hide();
             $('#employee_sign_in').show();
             $('#vendor_login_form').show();
         });
-        $('#employee_sign_in').on('click', function () {
+        $('#employee_sign_in').on('click', function() {
             $('.signIn').hide();
             $('#employee_login_form').show();
             $(this).hide();
@@ -368,20 +372,21 @@
 
 
     @if(env('APP_MODE') == 'demo')
-        <script>
-            function copy_cred() {
-                $('#signinSrEmail').val('test.restaurant@gmail.com');
-                $('#signupSrPassword').val('12345678');
-                toastr.success('Copied successfully!', 'Success!', {
-                    CloseButton: true,
-                    ProgressBar: true
-                });
-            }
-        </script>
+    <script>
+        function copy_cred() {
+            $('#signinSrEmail').val('test.restaurant@gmail.com');
+            $('#signupSrPassword').val('12345678');
+            toastr.success('Copied successfully!', 'Success!', {
+                CloseButton: true,
+                ProgressBar: true
+            });
+        }
+    </script>
     @endif
     <!-- IE Support -->
     <script>
-        if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('public/assets/admin')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
+        if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('
+            public / assets / admin ')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
     </script>
 </body>
 

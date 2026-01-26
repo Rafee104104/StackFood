@@ -71,15 +71,16 @@
                     <a class="text-body mr-3" href="javascript:;" data-toggle="modal" data-target="#print-invoice">
                         <i class="tio-print mr-1"></i> {{translate('messages.print')}} {{translate('messages.invoice')}}
                     </a>
-                    <script>
+
+
+                    @php($order_delivery_verification = (boolean)\App\Models\BusinessSetting::where(['key' => 'order_delivery_verification'])->first()->value)
+                    <div class="hs-unfold float-right">
+                        <script>
                         const a = "{{route('admin.order.status',['id'=>$order['id'],'order_status'=>'processing'])}}','Change status to cooking ?'";
                         const b = "{{route('admin.order.status',['id'=>$order['id'],'order_status'=>'processing'])}}','Change status to cooking ?";
                         const c = "{{route('admin.order.status',['id'=>$order['id'],'order_status'=>'handover'])}}','Change status to ready for handover ?'";
                         const d = "{{route('admin.order.status',['id'=>$order['id'],'order_status'=>'delivered'])}}','Change status to delivered (payment status will be paid if not) ?', {{$order_delivery_verification?'true':'false'}}";
                     </script>
-
-                    @php($order_delivery_verification = (boolean)\App\Models\BusinessSetting::where(['key' => 'order_delivery_verification'])->first()->value)
-                    <div class="hs-unfold float-right">
                         @if($order['order_status']=='pending' && $order['order_type']=='take_away')
                         <a class="btn btn-sm btn-primary" onclick="order_status_change_alert(a)" href="javascript:">{{translate('messages.confirm_this_order')}}</a>
                         @elseif ($order['order_status']=='confirmed' || $order['order_status']=='accepted')

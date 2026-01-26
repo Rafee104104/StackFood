@@ -24,6 +24,9 @@ use App\Http\Controllers\LiqPayController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\DeliveryManController;
 
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -168,3 +171,4 @@ Route::prefix('deliveryman')->name('deliveryman.')->group(function () {
 Route::group(['prefix'=> 'admin'], function () {
     require base_path('routes/admin.php');
 });
+

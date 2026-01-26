@@ -215,7 +215,7 @@
                                     <input type="text" name="longitude" class="form-control" placeholder="Ex : 103.344322"
                                         id="longitude" value="{{ old('longitude') }}" required readonly>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
 
                         <br>
@@ -349,7 +349,7 @@
                     groupClassName: 'col-lg-2 col-md-4 col-sm-4 col-6',
                     maxFileSize: '',
                     placeholderImage: {
-                        image: '{{ asset('assets/admin/img/400x400/img2.jpg') }}',
+                        image: "{{ asset('assets/admin/img/400x400/img2.jpg') }}",
                         width: '100%'
                     },
                     dropFileLabel: "Drop Here",
@@ -363,13 +363,13 @@
 
                     },
                     onExtensionErr: function(index, file) {
-                        toastr.error('{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                        toastr.error("{{ translate('messages.please_only_input_png_or_jpg_type_file') }}", {
                             CloseButton: true,
                             ProgressBar: true
                         });
                     },
                     onSizeErr: function(index, file) {
-                        toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                        toastr.error("{{ translate('messages.file_size_too_big') }}", {
                             CloseButton: true,
                             ProgressBar: true
                         });
