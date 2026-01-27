@@ -1060,7 +1060,7 @@ lng: {{ (float) ($store['longitude'] ?? 90.360587) }}
                 },
             });
             @endif
-        }
+        
 
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
             infoWindow.setPosition(pos);
