@@ -939,21 +939,14 @@
     <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap&v=3.45.8"></script>
     <script>
         function initMap() {
-            let map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 13,
-                center: {
-                    lat: {
-                        {
-                            $store ? $store['latitude'] : '23.757989'
-                        }
-                    },
-                    lng: {
-                        {
-                            $store ? $store['longitude'] : '90.360587'
-                        }
-                    }
-                }
-            });
+        let map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 13,
+            center: {
+                lat: {{ (float) ($store['latitude'] ?? 23.757989) }},
+lng: {{ (float) ($store['longitude'] ?? 90.360587) }}
+            }
+        });
+    }
 
             //get current location block
             let infoWindow = new google.maps.InfoWindow();

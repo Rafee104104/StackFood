@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.1",
+        "php": "^7.3 || ^8.0",
         "ext-curl": "*",
         "ext-json": "*",
         "brian2694/laravel-toastr": "^5.54",
@@ -52,8 +52,7 @@
             "app/CentralLogics/order.php",
             "app/CentralLogics/coupon.php",
             "app/CentralLogics/sms_module.php",
-            "app/CentralLogics/filemanager.php",
-            "vendor/laravelpkg/laravelchk/src/Http/Controllers/LaravelchkController.php"
+            "app/CentralLogics/filemanager.php"
         ],
         "psr-4": {
             "App\\": "app/",
@@ -91,6 +90,6 @@
             "composer/package-versions-deprecated": true
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
