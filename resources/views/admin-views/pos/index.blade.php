@@ -223,21 +223,7 @@
 
                                 <div class="dropdown-divider"></div>
 
-                                <a class="dropdown-item" href="javascript:" onclick="Swal.fire({
-                                    title: "{{translate('logout_warning_message')}}",
-                                    showDenyButton: true,
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#FC6A57' ,
-                                    cancelButtonColor: '#363636' ,
-                                    confirmButtonText: `Yes`,
-                                    denyButtonText: `Don't Logout`,
-                                    }).then((result)=> {
-                                    if (result.value) {
-                                    location.href="{{route('admin.auth.logout')}}";
-                                    } else{
-                                    Swal.fire('Canceled', '', 'info')
-                                    }
-                                    })">
+                                <a class="dropdown-item" href="javascript:void(0)" onclick="confirmLogout()">
                                     <span class="text-truncate pr-2" title="Sign out">{{translate('messages.sign_out')}}</span>
                                 </a>
                             </div>
@@ -293,6 +279,14 @@
                                         @endif
                                     </select>
                                 </div>
+                                <!-- 1 <div class="col-sm-6 col-12 mb-2">
+                                <select name="category" id="category" class="form-control js-select2-custom mx-1" title="{{translate('messages.select')}} {{translate('messages.category')}}" onchange="set_category_filter(this.value)">
+                                    <option value="">{{translate('messages.all_categories')}}</option>
+                                    @foreach ($categories as $item)
+                                    <option value="{{$item->id}}" {{$category==$item->id?'selected':''}}>{{Str::limit($item->name,20 ,'...')}}</option>
+                                    @endforeach
+                                </select>
+                                </div> -->
                                 <div class="col-sm-6 col-12 mb-2">
                                     <select name="category" id="category" class="form-control js-select2-custom mx-1" title="{{translate('messages.select')}} {{translate('messages.category')}}" onchange="set_category_filter(this.value)">
                                         <option value="">{{translate('messages.all_categories')}}</option>
@@ -450,7 +444,7 @@
     {!! Toastr::message() !!}
 
 
-    @if($errors->any())
+    <!-- @if($errors->any())
     <script>
         @foreach($errors->all() as $error)
         toastr.error('{{$error}}', 'Error', {
@@ -459,45 +453,52 @@
         });
         @endforeach
     </script>
-    @endif
-
+    @endif -->
+    @foreach($errors->all() as $error)
+    <script>
+        toastr.error('{{$error}}', 'Error', {
+            CloseButton: true,
+            ProgressBar: true
+        });
+    </script>
+    @endforeach
     <!-- JS Plugins Init. -->
 
     <script>
-    var STORE_AJAX_URL = "{{ url('/admin/vendor/get-stores') }}";
-    var MODULE_ID = "{{ request('module_id') }}"; // empty string if null
+        var STORE_AJAX_URL = "{{ url('/admin/vendor/get-stores') }}";
+        var MODULE_ID = "{{ request('module_id') }}"; // empty string if null
     </script>
 
     <script>
-    $(document).on('ready', function () {
-        $('#store_select').select2({
-            ajax: {
-                url: STORE_AJAX_URL,
-                data: function (params) {
-                    return {
-                        q: params.term || '',
-                        module_id: MODULE_ID || null,
-                        page: params.page || 1
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                transport: function (params, success, failure) {
-                    var request = $.ajax(params);
-                    request.then(success);
-                    request.fail(failure);
-                    return request;
+        $(document).on('ready', function() {
+            $('#store_select').select2({
+                ajax: {
+                    url: STORE_AJAX_URL,
+                    data: function(params) {
+                        return {
+                            q: params.term || '',
+                            module_id: MODULE_ID || null,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    transport: function(params, success, failure) {
+                        var request = $.ajax(params);
+                        request.then(success);
+                        request.fail(failure);
+                        return request;
+                    }
                 }
-            }
-        });
+            });
 
-        $('.js-hs-unfold-invoker').each(function () {
-            new HSUnfold($(this)).init();
+            $('.js-hs-unfold-invoker').each(function() {
+                new HSUnfold($(this)).init();
+            });
         });
-    });
 
 
 
@@ -930,26 +931,37 @@
                 },
             });
         }
-
-        @if(session('last_order'))
-        print_invoice("{{session('last_order')}}")
-        @php(session(['last_order' => false]))
-        @endif
     </script>
+    @if(session('last_order'))
+    <script>
+        print_invoice("{{session('last_order')}}");
+    </script>
+    @php(session(['last_order' => false]))
+    @endif
     <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap&v=3.45.8"></script>
     <script>
-        function initMap() {
-        let map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 13,
-            center: {
-                lat: {{ (float) ($store['latitude'] ?? 23.757989) }},
-lng: {{ (float) ($store['longitude'] ?? 90.360587) }}
-            }
-        });
-    }
+        const STORE_LOCATION = {
+            lat: {{ (float)($store['latitude'] ?? 23.757989) }},
+            lng: {{ (float)($store['longitude'] ?? 90.360587) }},
+        };
 
-            //get current location block
+        let map; // Define map globally if needed, or just let it be handled inside initMap if not used externally.
+        // Actually, other scripts might rely on 'map', so let's keep it accessible if possible,
+        // but the logic below assumes it runs AFTER initMap.
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 13,
+                center: STORE_LOCATION
+            });
+
+            // Move all dependent logic INSIDE initMap to ensure map exists
+            initializeMapFeatures(map);
+        }
+
+        function initializeMapFeatures(map) {
             let infoWindow = new google.maps.InfoWindow();
+
             // Try HTML5 geolocation.
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -1023,44 +1035,68 @@ lng: {{ (float) ($store['longitude'] ?? 90.360587) }}
                 map.fitBounds(bounds);
             });
             @if($store)
-            $.get({
-                url: "{{url('/')}}/admin/zone/get-coordinates/{{$store->zone_id}}",
+            $.ajax({
+                type: 'GET',
+                url: "{{ url('/admin/zone/get-coordinates/' . $store->zone_id) }}",
                 dataType: 'json',
                 success: function(data) {
-                    let = zonePolygon = new google.maps.Polygon({
+
+                    if (!data || !data.coordinates || !data.coordinates.length) {
+                        console.error('Zone coordinates not found!', data);
+                        return;
+                    }
+
+                    const bounds = new google.maps.LatLngBounds();
+
+                    const zonePolygon = new google.maps.Polygon({
                         paths: data.coordinates,
                         strokeColor: "#FF0000",
                         strokeOpacity: 0.8,
                         strokeWeight: 2,
-                        fillColor: 'white',
-                        fillOpacity: 0,
+                        fillColor: "#ffffff",
+                        fillOpacity: 0
                     });
+
                     zonePolygon.setMap(map);
+
+                    // Extend bounds with all polygon points (fit once, not on every point)
                     zonePolygon.getPaths().forEach(function(path) {
                         path.forEach(function(latlng) {
                             bounds.extend(latlng);
-                            map.fitBounds(bounds);
                         });
                     });
-                    map.setCenter(data.center);
-                    google.maps.event.addListener(zonePolygon, 'click', function(mapsMouseEvent) {
-                        infoWindow.close();
-                        // Create a new InfoWindow.
-                        infoWindow = new google.maps.InfoWindow({
-                            position: mapsMouseEvent.latLng,
-                            content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
-                        });
-                        var coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-                        var coordinates = JSON.parse(coordinates);
 
-                        document.getElementById('latitude').value = coordinates['lat'];
-                        document.getElementById('longitude').value = coordinates['lng'];
-                        infoWindow.open(map);
+                    map.fitBounds(bounds);
+
+                    // Optional center (only if backend provides it)
+                    if (data.center && typeof data.center.lat !== 'undefined' && typeof data.center.lng !== 'undefined') {
+                        map.setCenter(data.center);
+                    }
+
+                    // Make sure infoWindow exists
+                    if (!window.zoneInfoWindow) {
+                        window.zoneInfoWindow = new google.maps.InfoWindow();
+                    }
+
+                    google.maps.event.addListener(zonePolygon, 'click', function(e) {
+                        const coords = e.latLng.toJSON(); // {lat: number, lng: number}
+
+                        document.getElementById('latitude').value = coords.lat;
+                        document.getElementById('longitude').value = coords.lng;
+
+                        window.zoneInfoWindow.close();
+                        window.zoneInfoWindow.setPosition(e.latLng);
+                        window.zoneInfoWindow.setContent('Lat: ' + coords.lat + '<br>Lng: ' + coords.lng);
+                        window.zoneInfoWindow.open(map);
                     });
                 },
+                error: function(xhr) {
+                    console.error('Failed to load zone coordinates:', xhr.responseText || xhr.statusText);
+                }
             });
             @endif
-        
+        } // End of initializeMapFeatures
+
 
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
             infoWindow.setPosition(pos);
@@ -1089,19 +1125,39 @@ lng: {{ (float) ($store['longitude'] ?? 90.360587) }}
     </div>
 
     <script>
-    (function () {
-        if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
-            var el = document.getElementById('ie-polyfill');
-            var src = el.getAttribute('data-src');
+        (function() {
+            if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+                var el = document.getElementById('ie-polyfill');
+                var src = el.getAttribute('data-src');
 
-            var script = document.createElement('script');
-            script.src = src;
-            document.head.appendChild(script);
-        }
-    })();
+                var script = document.createElement('script');
+                script.src = src;
+                document.head.appendChild(script);
+            }
+        })();
     </script>
 
 
+
+    <script>
+        function confirmLogout() {
+            Swal.fire({
+                title: "{{ translate('logout_warning_message') }}",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#FC6A57',
+                cancelButtonColor: '#363636',
+                confirmButtonText: 'Yes',
+                denyButtonText: "Don't Logout",
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('admin.auth.logout') }}";
+                } else if (result.isDenied || result.isDismissed) {
+                    Swal.fire('Canceled', '', 'info');
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

@@ -352,7 +352,7 @@
 <script src="{{asset('public/assets/admin')}}/js/toastr.js"></script>
 {!! Toastr::message() !!}
 
-@if ($errors->any())
+@if($errors->any())
     <script>
         @foreach($errors->all() as $error)
         toastr.error('{{$error}}', 'Error', {
@@ -375,7 +375,7 @@
 <!-- JS Plugins Init. -->
 <script>
     $(function () {
-        @if ($order)
+        @if($order)
             if ($('#print-invoice').length) {
                 $('#print-invoice').modal('show');
             }
