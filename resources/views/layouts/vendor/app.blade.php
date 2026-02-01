@@ -164,32 +164,31 @@
 
     @stack('script')
 
-    <!-- JS Front -->
-    <script src="{{asset('assets/admin/js/vendor.min.js')}}"></script>
-    <script src="{{asset('assets/admin/js/theme.min.js')}}"></script>
-    <script src="{{asset('assets/admin/js/sweet_alert.js')}}"></script>
-    <script src="{{asset('assets/admin/js/toastr.js')}}"></script>
-    {!! Toastr::$message() !!}
+<!-- JS Front -->
+<script src="{{asset('assets/admin/js/vendor.min.js')}}"></script>
+<script src="{{asset('assets/admin/js/theme.min.js')}}"></script>
+<script src="{{asset('assets/admin/js/sweet_alert.js')}}"></script>
+<script src="{{asset('assets/admin/js/toastr.js')}}"></script>
+{!! Toastr::message() !!}
 
-    
-@foreach($errors->all() as $error)
+@if ($errors->any())
     <script>
         toastr.error('{{$error}}', 'Error', {
             CloseButton: true,
             ProgressBar: true
         });
     </script>
-@endforeach
-    <!-- JS Plugins Init. -->
-    <script>
-        $(document).on('ready', function() {
-            // ONLY DEV
-            // =======================================================
-            if (window.localStorage.getItem('hs-builder-popover') === null) {
-                $('#builderPopover').popover('show')
-                    .on('shown.bs.popover', function() {
-                        $('.popover').last().addClass('popover-dark')
-                    });
+@endif
+<!-- JS Plugins Init. -->
+<script>
+    $(document).on('ready', function () {
+        // ONLY DEV
+        // =======================================================
+        if (window.localStorage.getItem('hs-builder-popover') === null) {
+            $('#builderPopover').popover('show')
+                .on('shown.bs.popover', function () {
+                    $('.popover').last().addClass('popover-dark')
+                });
 
                 $(document).on('click', '#closeBuilderPopover', function() {
                     window.localStorage.setItem('hs-builder-popover', true);
