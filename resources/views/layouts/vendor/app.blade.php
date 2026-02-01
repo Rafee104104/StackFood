@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -41,13 +42,16 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #FC6A57;
         }
+
         .deco-none {
             color: inherit;
             text-decoration: inherit;
         }
-        .qcont{
+
+        .qcont {
             text-transform: lowercase;
         }
+
         .qcont:first-letter {
             text-transform: capitalize;
         }
@@ -62,11 +66,16 @@
             color: #C6FFC1;
         }
 
-        .navbar .active > .nav-link, .navbar .nav-link.active, .navbar .nav-link.show, .navbar .show > .nav-link {
+        .navbar .active>.nav-link,
+        .navbar .nav-link.active,
+        .navbar .nav-link.show,
+        .navbar .show>.nav-link {
             color: #C6FFC1;
         }
 
-        .navbar-vertical .active .nav-indicator-icon, .navbar-vertical .nav-link:hover .nav-indicator-icon, .navbar-vertical .show > .nav-link > .nav-indicator-icon {
+        .navbar-vertical .active .nav-indicator-icon,
+        .navbar-vertical .nav-link:hover .nav-indicator-icon,
+        .navbar-vertical .show>.nav-link>.nav-indicator-icon {
             color: #C6FFC1;
         }
 
@@ -78,11 +87,12 @@
             letter-spacing: .03125rem;
         }
 
-        .navbar-vertical .navbar-nav.nav-tabs .active .nav-link, .navbar-vertical .navbar-nav.nav-tabs .active.nav-link {
+        .navbar-vertical .navbar-nav.nav-tabs .active .nav-link,
+        .navbar-vertical .navbar-nav.nav-tabs .active.nav-link {
             border-left-color: #C6FFC1;
         }
 
-        .cursor-pointer{
+        .cursor-pointer {
             cursor: pointer;
         }
     </style>
@@ -93,313 +103,314 @@
 
 <body class="footer-offset">
 
-{{--loader--}}
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div id="loading" style="display: none;">
-                <div style="position: fixed;z-index: 9999; left: 40%;top: 37% ;width: 100%">
-                    <img width="200" src="{{asset('assets/admin/img/loader.gif')}}">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{{--loader--}}
-
-<!-- Builder -->
-@include('layouts.vendor.partials._front-settings')
-<!-- End Builder -->
-
-<!-- JS Preview mode only -->
-@include('layouts.vendor.partials._header')
-@include('layouts.vendor.partials._sidebar')
-<!-- END ONLY DEV -->
-
-<main id="content" role="main" class="main pointer-event">
-    <!-- Content -->
-@yield('content')
-<!-- End Content -->
-
-    <!-- Footer -->
-@include('layouts.vendor.partials._footer')
-<!-- End Footer -->
-
-    <div class="modal fade" id="popup-modal">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <center>
-                                <h2 style="color: rgba(96,96,96,0.68)">
-                                    <i class="tio-shopping-cart-outlined"></i> {{translate('messages.You have new order, Check Please.')}}
-                                </h2>
-                                <hr>
-                                <button onclick="check_order()" class="btn btn-primary">{{translate('messages.Ok, let me check')}}</button>
-                            </center>
-                        </div>
+    {{--loader--}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="loading" style="display: none;">
+                    <div style="position: fixed;z-index: 9999; left: 40%;top: 37% ;width: 100%">
+                        <img width="200" src="{{asset('assets/admin/img/loader.gif')}}">
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {{--loader--}}
 
-</main>
-<!-- ========== END MAIN CONTENT ========== -->
+    <!-- Builder -->
+    @include('layouts.vendor.partials._front-settings')
+    <!-- End Builder -->
 
-<!-- ========== END SECONDARY CONTENTS ========== -->
-<script src="{{asset('assets/admin/js/custom.js')}}"></script>
-<!-- JS Implementing Plugins -->
+    <!-- JS Preview mode only -->
+    @include('layouts.vendor.partials._header')
+    @include('layouts.vendor.partials._sidebar')
+    <!-- END ONLY DEV -->
 
-@stack('script')
+    <main id="content" role="main" class="main pointer-event">
+        <!-- Content -->
+        @yield('content')
+        <!-- End Content -->
 
-<!-- JS Front -->
-<script src="{{asset('assets/admin/js/vendor.min.js')}}"></script>
-<script src="{{asset('assets/admin/js/theme.min.js')}}"></script>
-<script src="{{asset('assets/admin/js/sweet_alert.js')}}"></script>
-<script src="{{asset('assets/admin/js/toastr.js')}}"></script>
-{!! Toastr::message() !!}
+        <!-- Footer -->
+        @include('layouts.vendor.partials._footer')
+        <!-- End Footer -->
 
-@if ($errors->any())
+        <div class="modal fade" id="popup-modal">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <center>
+                                    <h2 style="color: rgba(96,96,96,0.68)">
+                                        <i class="tio-shopping-cart-outlined"></i> {{translate('messages.You have new order, Check Please.')}}
+                                    </h2>
+                                    <hr>
+                                    <button onclick="check_order()" class="btn btn-primary">{{translate('messages.Ok, let me check')}}</button>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <!-- ========== END MAIN CONTENT ========== -->
+
+    <!-- ========== END SECONDARY CONTENTS ========== -->
+    <script src="{{asset('assets/admin/js/custom.js')}}"></script>
+    <!-- JS Implementing Plugins -->
+
+    @stack('script')
+
+    <!-- JS Front -->
+    <script src="{{asset('assets/admin/js/vendor.min.js')}}"></script>
+    <script src="{{asset('assets/admin/js/theme.min.js')}}"></script>
+    <script src="{{asset('assets/admin/js/sweet_alert.js')}}"></script>
+    <script src="{{asset('assets/admin/js/toastr.js')}}"></script>
+    {!! Toastr::$message() !!}
+
+    
+@foreach($errors->all() as $error)
     <script>
-        @foreach($errors->all() as $error)
-        toastr.error('{{$error}}', Error, {
+        toastr.error('{{$error}}', 'Error', {
             CloseButton: true,
             ProgressBar: true
         });
-        @endforeach
     </script>
-@endif
-<!-- JS Plugins Init. -->
-<script>
-    $(document).on('ready', function () {
-        // ONLY DEV
-        // =======================================================
-        if (window.localStorage.getItem('hs-builder-popover') === null) {
-            $('#builderPopover').popover('show')
-                .on('shown.bs.popover', function () {
-                    $('.popover').last().addClass('popover-dark')
+@endforeach
+    <!-- JS Plugins Init. -->
+    <script>
+        $(document).on('ready', function() {
+            // ONLY DEV
+            // =======================================================
+            if (window.localStorage.getItem('hs-builder-popover') === null) {
+                $('#builderPopover').popover('show')
+                    .on('shown.bs.popover', function() {
+                        $('.popover').last().addClass('popover-dark')
+                    });
+
+                $(document).on('click', '#closeBuilderPopover', function() {
+                    window.localStorage.setItem('hs-builder-popover', true);
+                    $('#builderPopover').popover('dispose');
                 });
+            } else {
+                $('#builderPopover').on('show.bs.popover', function() {
+                    return false
+                });
+            }
+            // END ONLY DEV
+            // =======================================================
 
-            $(document).on('click', '#closeBuilderPopover', function () {
-                window.localStorage.setItem('hs-builder-popover', true);
-                $('#builderPopover').popover('dispose');
+            // BUILDER TOGGLE INVOKER
+            // =======================================================
+            $('.js-navbar-vertical-aside-toggle-invoker').click(function() {
+                $('.js-navbar-vertical-aside-toggle-invoker i').tooltip('hide');
             });
-        } else {
-            $('#builderPopover').on('show.bs.popover', function () {
-                return false
+
+            // INITIALIZATION OF NAVBAR VERTICAL NAVIGATION
+            // =======================================================
+            var sidebar = $('.js-navbar-vertical-aside').hsSideNav();
+
+
+            // INITIALIZATION OF TOOLTIP IN NAVBAR VERTICAL MENU
+            // =======================================================
+            $('.js-nav-tooltip-link').tooltip({
+                boundary: 'window'
+            })
+
+            $(".js-nav-tooltip-link").on("show.bs.tooltip", function(e) {
+                if (!$("body").hasClass("navbar-vertical-aside-mini-mode")) {
+                    return false;
+                }
             });
-        }
-        // END ONLY DEV
-        // =======================================================
-
-        // BUILDER TOGGLE INVOKER
-        // =======================================================
-        $('.js-navbar-vertical-aside-toggle-invoker').click(function () {
-            $('.js-navbar-vertical-aside-toggle-invoker i').tooltip('hide');
-        });
-
-        // INITIALIZATION OF NAVBAR VERTICAL NAVIGATION
-        // =======================================================
-        var sidebar = $('.js-navbar-vertical-aside').hsSideNav();
 
 
-        // INITIALIZATION OF TOOLTIP IN NAVBAR VERTICAL MENU
-        // =======================================================
-        $('.js-nav-tooltip-link').tooltip({boundary: 'window'})
-
-        $(".js-nav-tooltip-link").on("show.bs.tooltip", function (e) {
-            if (!$("body").hasClass("navbar-vertical-aside-mini-mode")) {
-                return false;
-            }
-        });
+            // INITIALIZATION OF UNFOLD
+            // =======================================================
+            $('.js-hs-unfold-invoker').each(function() {
+                var unfold = new HSUnfold($(this)).init();
+            });
 
 
-        // INITIALIZATION OF UNFOLD
-        // =======================================================
-        $('.js-hs-unfold-invoker').each(function () {
-            var unfold = new HSUnfold($(this)).init();
-        });
+            // INITIALIZATION OF FORM SEARCH
+            // =======================================================
+            $('.js-form-search').each(function() {
+                new HSFormSearch($(this)).init()
+            });
 
 
-        // INITIALIZATION OF FORM SEARCH
-        // =======================================================
-        $('.js-form-search').each(function () {
-            new HSFormSearch($(this)).init()
-        });
+            // INITIALIZATION OF SELECT2
+            // =======================================================
+            $('.js-select2-custom').each(function() {
+                var select2 = $.HSCore.components.HSSelect2.init($(this));
+            });
 
 
-        // INITIALIZATION OF SELECT2
-        // =======================================================
-        $('.js-select2-custom').each(function () {
-            var select2 = $.HSCore.components.HSSelect2.init($(this));
-        });
+            // INITIALIZATION OF DATERANGEPICKER
+            // =======================================================
+            $('.js-daterangepicker').daterangepicker();
 
-
-        // INITIALIZATION OF DATERANGEPICKER
-        // =======================================================
-        $('.js-daterangepicker').daterangepicker();
-
-        $('.js-daterangepicker-times').daterangepicker({
-            timePicker: true,
-            startDate: moment().startOf('hour'),
-            endDate: moment().startOf('hour').add(32, 'hour'),
-            locale: {
-                format: 'M/DD hh:mm A'
-            }
-        });
-
-        var start = moment();
-        var end = moment();
-
-        function cb(start, end) {
-            $('#js-daterangepicker-predefined .js-daterangepicker-predefined-preview').html(start.format('MMM D') + ' - ' + end.format('MMM D, YYYY'));
-        }
-
-        $('#js-daterangepicker-predefined').daterangepicker({
-            startDate: start,
-            endDate: end,
-            ranges: {
-                'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            }
-        }, cb);
-
-        cb(start, end);
-
-
-        // INITIALIZATION OF CLIPBOARD
-        // =======================================================
-        $('.js-clipboard').each(function () {
-            var clipboard = $.HSCore.components.HSClipboard.init(this);
-        });
-    });
-</script>
-
-@stack('script_2')
-<audio id="myAudio">
-    <source src="{{asset('assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
-</audio>
-
-<script>
-    var audio = document.getElementById("myAudio");
-
-    function playAudio() {
-        audio.play();
-    }
-
-    function pauseAudio() {
-        audio.pause();
-    }
-</script>
-
-   @if(\App\CentralLogics\Helpers::employee_module_permission_check('order'))
-<script>
-    var order_type = 'all';
-    var popupOpen = false;
-
-    setInterval(function () {
-        $.get({
-            url: "{{ route('vendor.get-store-data') }}",
-            dataType: 'json',
-            success: function (response) {
-                if (!response || !response.data || popupOpen) return;
-
-                let data = response.data;
-
-                if (data.new_pending_order > 0) {
-                    order_type = 'pending';
-                    showPopup();
+            $('.js-daterangepicker-times').daterangepicker({
+                timePicker: true,
+                startDate: moment().startOf('hour'),
+                endDate: moment().startOf('hour').add(32, 'hour'),
+                locale: {
+                    format: 'M/DD hh:mm A'
                 }
-                else if (data.new_confirmed_order > 0) {
-                    order_type = 'confirmed';
-                    showPopup();
-                }
+            });
+
+            var start = moment();
+            var end = moment();
+
+            function cb(start, end) {
+                $('#js-daterangepicker-predefined .js-daterangepicker-predefined-preview').html(start.format('MMM D') + ' - ' + end.format('MMM D, YYYY'));
             }
-        });
-    }, 10000);
 
-    function showPopup() {
-        popupOpen = true;
-        playAudio();
-        $('#popup-modal').appendTo('body').modal('show');
+            $('#js-daterangepicker-predefined').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
 
-        $('#popup-modal').one('hidden.bs.modal', function () {
-            popupOpen = false;
+            cb(start, end);
+
+
+            // INITIALIZATION OF CLIPBOARD
+            // =======================================================
+            $('.js-clipboard').each(function() {
+                var clipboard = $.HSCore.components.HSClipboard.init(this);
+            });
         });
-    }
-</script>
-@endif
+    </script>
+
+    @stack('script_2')
+    <audio id="myAudio">
+        <source src="{{asset('assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
+    </audio>
 
     <script>
-    function check_order() {
-        location.href = '{{url('/')}}/vendor-panel/order/list/'+order_type;
-    }
+        var audio = document.getElementById("myAudio");
 
-    function route_alert(route, message) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: message,
-            type: 'warning',
-            showCancelButton: true,
-            cancelButtonColor: 'default',
-            confirmButtonColor: '#FC6A57',
-            cancelButtonText: 'No',
-            confirmButtonText: 'Yes',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.value) {
-                location.href = route;
-            }
-        })
-    }
+        function playAudio() {
+            audio.play();
+        }
 
-    function form_alert(id, message) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: message,
-            type: 'warning',
-            showCancelButton: true,
-            cancelButtonColor: 'default',
-            confirmButtonColor: '#FC6A57',
-            cancelButtonText: 'No',
-            confirmButtonText: 'Yes',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.value) {
-                $('#'+id).submit()
-            }
-        })
-    }
+        function pauseAudio() {
+            audio.pause();
+        }
+    </script>
 
-    function set_filter(url, id, filter_by) {
-        var nurl = new URL(url);
-        nurl.searchParams.set(filter_by, id);
-        location.href = nurl;
-    }
-</script>
+    @if(\App\CentralLogics\Helpers::employee_module_permission_check('order'))
+    <script>
+        var order_type = 'all';
+        var popupOpen = false;
 
-<script>
-    function call_demo(){
-        toastr.info('Update option is disabled for demo!', {
-            CloseButton: true,
-            ProgressBar: true
-        });
-    }
-</script>
+        setInterval(function() {
+            $.get({
+                url: "{{ route('vendor.get-store-data') }}",
+                dataType: 'json',
+                success: function(response) {
+                    if (!response || !response.data || popupOpen) return;
 
-<script>
-    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
-        var script = document.createElement('script');
-        script.src = "{{ asset('assets/admin/vendor/babel-polyfill/polyfill.min.js') }}";
-        document.head.appendChild(script);
-    }
-</script>
+                    let data = response.data;
+
+                    if (data.new_pending_order > 0) {
+                        order_type = 'pending';
+                        showPopup();
+                    } else if (data.new_confirmed_order > 0) {
+                        order_type = 'confirmed';
+                        showPopup();
+                    }
+                }
+            });
+        }, 10000);
+
+        function showPopup() {
+            popupOpen = true;
+            playAudio();
+            $('#popup-modal').appendTo('body').modal('show');
+
+            $('#popup-modal').one('hidden.bs.modal', function() {
+                popupOpen = false;
+            });
+        }
+    </script>
+    @endif
+
+    <script>
+        function check_order() {
+            location.href = '{{url(' / ')}}/vendor-panel/order/list/' + order_type;
+        }
+
+        function route_alert(route, message) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: message,
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: 'default',
+                confirmButtonColor: '#FC6A57',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Yes',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    location.href = route;
+                }
+            })
+        }
+
+        function form_alert(id, message) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: message,
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: 'default',
+                confirmButtonColor: '#FC6A57',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Yes',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    $('#' + id).submit()
+                }
+            })
+        }
+
+        function set_filter(url, id, filter_by) {
+            var nurl = new URL(url);
+            nurl.searchParams.set(filter_by, id);
+            location.href = nurl;
+        }
+    </script>
+
+    <script>
+        function call_demo() {
+            toastr.info('Update option is disabled for demo!', {
+                CloseButton: true,
+                ProgressBar: true
+            });
+        }
+    </script>
+
+    <script>
+        if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
+            var script = document.createElement('script');
+            script.src = "{{ asset('assets/admin/vendor/babel-polyfill/polyfill.min.js') }}";
+            document.head.appendChild(script);
+        }
+    </script>
 
 </body>
+
 </html>

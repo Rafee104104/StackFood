@@ -36,6 +36,9 @@
         border: none;
     }
 </style>
+<script>
+    window.CART_FALLBACK_IMG = "{{ asset('assets/admin/img/160x160/img2.jpg') }}";
+</script>
 <div class="modal-header p-0">
     <h4 class="modal-title product-title">
     </h4>
@@ -50,12 +53,9 @@
         @endif
         <!-- Product gallery-->
         <div class="d-flex align-items-center justify-content-center active" style="height:9.5rem;">
-        <script>
-                        const img = "{{asset('assets/admin/img/160x160/img2.jpg')}}";
-                    </script>
         <img class="img-responsive" style="height:100%;width:auto;overflow:hidden;border-radius: 5%;"
                 src="{{asset('storage/product')}}/{{$product['image']}}"
-                onerror="this.src=img"
+                onerror="this.src=window.CART_FALLBACK_IMG"
                 data-zoom="{{asset('storage/product')}}/{{$product['image']}}"
                 alt="Product image" width="">
             <div class="cz-image-zoom-pane"></div>
@@ -195,3 +195,4 @@
         getVariantPrice();
     });
 </script>
+

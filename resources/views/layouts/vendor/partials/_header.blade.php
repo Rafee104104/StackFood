@@ -1,3 +1,6 @@
+<script>
+    window.CART_FALLBACK_IMG = "{{ asset('assets/admin/img/160x160/img2.jpg') }}";
+</script>
 <div id="headerMain" class="d-none">
     <header id="header"
         class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-flush navbar-container navbar-bordered">
@@ -6,16 +9,14 @@
                 <!-- Logo Div-->
                 @php($store_logo=\App\CentralLogics\Helpers::get_store_data()->logo)
                 <a class="navbar-brand" href="{{route('vendor.dashboard')}}" aria-label="">
-                    <script>
-                        const img = "{{asset('assets/admin/img/160x160/img1.jpg')}}";
-                    </script>
+
                     <img class="navbar-brand-logo"
                         style="border-radius: 50%;height: 47px;width: 47px!important; border: 5px solid #80808012"
-                        onerror="this.src=img"
+                        onerror="this.src=window.CART_FALLBACK_IMG"
                         src="{{asset('storage/store/'.$store_logo)}}" alt="Logo">
                     <img class="navbar-brand-logo-mini"
                         style="border-radius: 50%;height: 47px;width: 47px!important; border: 5px solid #80808012"
-                        onerror="this.src=img"
+                        onerror="this.src=window.CART_FALLBACK_IMG"
                         src="{{asset('storage/store/'.$store_logo)}}"
                         alt="Logo">
                 </a>
@@ -59,11 +60,8 @@
                                      "type": "css-animation"
                                    }'>
                                 <div class="avatar avatar-sm avatar-circle">
-                                    <script>
-                                        const img1 = "{{asset('assets/admin/img/160x160/img1.jpg')}}";
-                                    </script>
                                     <img class="avatar-img"
-                                        onerror="this.src=img1"
+                                        onerror="this.src=window.CART_FALLBACK_IMG"
                                         src="{{asset('storage/vendor')}}/{{\App\CentralLogics\Helpers::get_loggedin_user()->image}}"
                                         alt="Image Description">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
@@ -78,7 +76,7 @@
                                         <div class="avatar avatar-sm avatar-circle mr-2">
 
                                             <img class="avatar-img"
-                                                onerror="this.src=img1"
+                                                onerror="this.src=window.CART_FALLBACK_IMG"
                                                 src="{{asset('storage/vendor')}}/{{\App\CentralLogics\Helpers::get_loggedin_user()->image}}"
                                                 alt="Owner image">
                                         </div>
@@ -115,11 +113,7 @@
                                             denyButtonText: "Don't Logout",
                                         }).then(function(result) {
                                             if (result.isConfirmed) {
-                                                @if(auth('vendor')->check())
-                                                window.location.href = "{{ route('vendor.auth.logout') }}";
-                                                @elseif(auth('vendor_employee')->check())
-                                                window.location.href = "{{ route('vendor.auth.employee.logout') }}";
-                                                @endif
+                                                window.location.href = "{{ auth('vendor')->check() ? route('vendor.auth.logout') : route('vendor.auth.employee.logout') }}";
                                             } else if (result.isDenied || result.isDismissed) {
                                                 Swal.fire('Canceled', '', 'info');
                                             }

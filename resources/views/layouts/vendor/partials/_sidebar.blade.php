@@ -1,9 +1,11 @@
-@ -1,554 +1,569 @@
 <style>
     .nav-sub {
         background: #213A36 !important;
     }
 </style>
+<script>
+    window.CART_FALLBACK_IMG = "{{ asset('assets/admin/img/160x160/img2.jpg') }}";
+</script>
 <div id="sidebarMain" class="d-none">
     <aside
         class="js-navbar-vertical-aside navbar navbar-vertical-aside navbar-vertical navbar-vertical-fixed navbar-expand-xl navbar-bordered">
@@ -19,16 +21,13 @@
                 @php($store_data = \App\CentralLogics\Helpers::get_store_data())
                 <a class="navbar-brand" href="{{route('vendor.dashboard')}}" aria-label="Front"
                     style="padding-top: 0!important;padding-bottom: 0!important;">
-                    <script>
-                        img ="{{asset('assets/admin/img/160x160/img2.jpg')}}";
-                    </script>
                     <img class="navbar-brand-logo"
                         style="border-radius: 50%;height: 55px;width: 55px!important; border: 5px solid #80808012"
-                        onerror="this.src=img"
+                        onerror="this.src=CART_FALLBACK_IMG"
                         src="{{asset('storage/store/' . ($store_data ? $store_data->logo : ''))}}" alt="Logo">
                     <img class="navbar-brand-logo-mini"
                         style="border-radius: 50%;height: 55px;width: 55px!important; border: 5px solid #80808012"
-                        onerror="this.src=img"
+                        onerror="this.src=CART_FALLBACK_IMG"
                         src="{{asset('storage/store/' . ($store_data ? $store_data->logo : ''))}}" alt="Logo">
                 </a>
                 {{\Illuminate\Support\Str::limit($store_data->name ?? 'Store', 15)}}
@@ -75,7 +74,7 @@
                                                 </span>
                                             </a>
                                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                                style="display: {{Request::is('vendor-panel/order*') ? 'block' : 'none'}}">
+                                                style="display: {{ Request::is('vendor-panel/order*') ? 'block' : 'none' }}">
                                                 <li class="nav-item {{Request::is('vendor-panel/order/list/pending') ? 'active' : ''}}">
                                                     <a class="nav-link " href="{{route('vendor.order.list', ['pending'])}}"
                                                         title="{{translate('messages.pending')}}({{translate('messages.take_away')}})">
@@ -228,7 +227,7 @@
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{translate('messages.pos')}}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display: {{Request::is('vendor-panel/pos/*') ? 'block' : 'none'}}">
+                                style="display: {{ Request::is('vendor-panel/pos/*') ? 'block' : 'none' }}">
                                 <li class="nav-item {{Request::is('vendor-panel/pos/') ? 'active' : ''}}">
                                     <a class="nav-link " href="{{route('vendor.pos.index')}}"
                                         title="{{translate('messages.pos')}}">
@@ -279,7 +278,7 @@
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{translate('messages.items')}}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display: {{Request::is('vendor-panel/item*') ? 'block' : 'none'}}">
+                                style="display: {{ Request::is('vendor-panel/item*') ? 'block' : 'none' }}">
                                 <li class="nav-item {{Request::is('vendor-panel/item/add-new') ? 'active' : ''}}">
                                     <a class="nav-link " href="{{route('vendor.item.add-new')}}" title="add new item">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -322,7 +321,7 @@
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{translate('messages.categories')}}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display: {{Request::is('vendor-panel/category*') ? 'block' : 'none'}}">
+                                style="display: {{ Request::is('vendor-panel/category*') ? 'block' : 'none' }}">
                                 <li class="nav-item {{Request::is('vendor-panel/category/list') ? 'active' : ''}}">
                                     <a class="nav-link " href="{{route('vendor.category.add')}}"
                                         title="{{translate('messages.category')}}">
@@ -402,7 +401,7 @@
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{translate('messages.campaign')}}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display: {{Request::is('vendor-panel/campaign*') ? 'block' : 'none'}}">
+                                style="display: {{ Request::is('vendor-panel/campaign*') ? 'block' : 'none' }}">
                                 <li class="nav-item {{Request::is('vendor-panel/campaign/list') ? 'active' : ''}}">
                                     <a class="nav-link " href="{{route('vendor.campaign.list')}}">
                                         <span class="tio-circle nav-indicator-icon"></span>
@@ -514,7 +513,7 @@
                                     class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{translate('messages.employees')}}</span>
                             </a>
                             <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display: {{Request::is('vendor-panel/employee*') ? 'block' : 'none'}}">
+                                style="display: {{ Request::is('vendor-panel/employee*') ? 'block' : 'none' }}">
                                 <li class="nav-item {{Request::is('vendor-panel/employee/add-new') ? 'active' : ''}}">
                                     <a class="nav-link " href="{{route('vendor.employee.add-new')}}"
                                         title="{{translate('messages.add')}} {{translate('messages.new')}} {{translate('messages.Employee')}}">
