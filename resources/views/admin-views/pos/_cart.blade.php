@@ -1,3 +1,6 @@
+<script>
+    window.CART_FALLBACK_IMG = "{{ asset('assets/admin/img/160x160/img2.jpg') }}";
+</script>|
 <div class="d-flex flex-row" style="max-height: 300px; overflow-y: scroll;">
     <table class="table table-bordered">
         <thead class="text-muted">
@@ -38,18 +41,23 @@
             ?>
             <tr>
                 <td class="media align-items-center cursor-pointer cart-item"
-                    data-id="{{ $cartItem['id'] }}"
-                    data-key="{{ $key }}">
-                    <script>
-                        const img = "{{asset('assets/admin/img/160x160/img2.jpg')}}";
-                    </script>
-                    <img class="avatar avatar-sm mr-1" src="{{asset('storage/product')}}/{{$cartItem['image']}}"
-                        onerror="this.src=img" alt="{{$cartItem['name']}} image">
-                    <div class="media-body">
-                        <h5 class="text-hover-primary mb-0">{{Str::limit($cartItem['name'], 10)}}</h5>
-                        <small>{{Str::limit($cartItem['variant'], 20)}}</small>
-                    </div>
-                </td>
+    role="button"
+    data-id="{{ $cartItem['id'] }}"
+    data-key="{{ $key }}">
+
+    <img class="avatar avatar-sm mr-1"
+         src="{{ asset('storage/product/'.$cartItem['image']) }}"
+         onerror="this.src=window.CART_FALLBACK_IMG"
+         alt="{{ e($cartItem['name']) }} image">
+
+    <div class="media-body">
+        <h5 class="text-hover-primary mb-0">
+            {{ Str::limit($cartItem['name'], 10) }}
+        </h5>
+        <small>{{ Str::limit($cartItem['variant'], 20) }}</small>
+    </div>
+</td>
+
                 <td class="align-items-center text-center">
                     <input type="number" data-key="{{$key}}" style="width:50px;text-align: center;" value="{{$cartItem['quantity']}}" min="1" onkeyup="updateQuantity(event)">
                 </td>

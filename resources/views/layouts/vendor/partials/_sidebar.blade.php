@@ -4,6 +4,9 @@
         background: #213A36 !important;
     }
 </style>
+<script>
+    window.CART_FALLBACK_IMG = "{{ asset('assets/admin/img/160x160/img2.jpg') }}";
+</script>
 <div id="sidebarMain" class="d-none">
     <aside
         class="js-navbar-vertical-aside navbar navbar-vertical-aside navbar-vertical navbar-vertical-fixed navbar-expand-xl navbar-bordered">
@@ -19,16 +22,13 @@
                 @php($store_data = \App\CentralLogics\Helpers::get_store_data())
                 <a class="navbar-brand" href="{{route('vendor.dashboard')}}" aria-label="Front"
                     style="padding-top: 0!important;padding-bottom: 0!important;">
-                    <script>
-                        img ="{{asset('assets/admin/img/160x160/img2.jpg')}}";
-                    </script>
                     <img class="navbar-brand-logo"
                         style="border-radius: 50%;height: 55px;width: 55px!important; border: 5px solid #80808012"
-                        onerror="this.src=img"
+                        onerror="this.src=CART_FALLBACK_IMG"
                         src="{{asset('storage/store/' . ($store_data ? $store_data->logo : ''))}}" alt="Logo">
                     <img class="navbar-brand-logo-mini"
                         style="border-radius: 50%;height: 55px;width: 55px!important; border: 5px solid #80808012"
-                        onerror="this.src=img"
+                        onerror="this.src=CART_FALLBACK_IMG"
                         src="{{asset('storage/store/' . ($store_data ? $store_data->logo : ''))}}" alt="Logo">
                 </a>
                 {{\Illuminate\Support\Str::limit($store_data->name ?? 'Store', 15)}}

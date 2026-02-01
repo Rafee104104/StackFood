@@ -1,15 +1,14 @@
 <style>
 
 </style>
-
+<script>
+    window.CART_FALLBACK_IMG = "{{ asset('assets/admin/img/160x160/img2.jpg') }}";
+</script>
 <div class="product-card card" onclick="quickView('{{$product->id}}')" style="cursor: pointer;">
     <div class="card-header inline_product clickable p-0" style="height:134px;width:100%;overflow:hidden;">
         <div class="d-flex align-items-center justify-content-center d-block">
-            <script>
-                const img = "{{asset('assets/admin/img/160x160/img2.jpg')}}";
-            </script>
             <img src="{{asset('storage/product')}}/{{$product['image']}}"
-                onerror="this.src=img"
+                onerror="this.src=window.CART_FALLBACK_IMG"
                 style="width: 100%; border-radius: 5%;">
         </div>
     </div>

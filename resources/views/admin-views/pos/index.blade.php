@@ -127,7 +127,9 @@
 </head>
 
 <body class="footer-offset">
-
+    <script>
+        window.CART_FALLBACK_IMG = "{{ asset('assets/admin/img/160x160/img1.jpg') }}";
+    </script>
     {{--loader--}}
     <div class="container">
         <div class="row">
@@ -148,13 +150,10 @@
         <div class="navbar-nav-wrap">
             <div class="navbar-brand-wrapper">
                 <!-- Logo Div-->
-                <script>
-                    const storeLogo = "{{asset('assets/admin/img/160x160/img1.jpg')}}";
-                </script>
                 @php($store_logo = optional(\App\Models\BusinessSetting::where(['key' => 'logo'])->first())->value)
                 <a class="navbar-brand" href="{{route('admin.dashboard')}}" aria-label="">
                     <img class="" style="max-height: 48px; border-radius: 8px"
-                        onerror="this.src=storeLogo"
+                        onerror="this.src=window.CART_FALLBACK_IMG"
                         src="{{asset('storage/app/public/business/'.$store_logo??'')}}" alt="Logo">
                 </a>
             </div>
@@ -183,20 +182,14 @@
                                      "target": "#accountNavbarDropdown",
                                      "type": "css-animation"
                                    }'>
-                                <script>
-                                    const adminImage1 = "{{asset('assets/admin/img/160x160/img1.jpg')}}";
-                                </script>
                                 <div class="avatar avatar-sm avatar-circle">
                                     <img class="avatar-img"
-                                        onerror="this.src=adminImage1"
+                                        onerror="this.src=window.CART_FALLBACK_IMG"
                                         src="{{asset('storage/app/public/admin/'.auth('admin')->user()->image)}}"
                                         alt="Image Description">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
                             </a>
-                            <script>
-                                const adminImage2 = "{{asset('assets/admin/img/160x160/img1.jpg')}}";
-                            </script>
                             <div id="accountNavbarDropdown"
                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right navbar-dropdown-menu navbar-dropdown-account"
                                 style="width: 16rem;">
@@ -204,7 +197,7 @@
                                     <div class="media align-items-center">
                                         <div class="avatar avatar-sm avatar-circle mr-2">
                                             <img class="avatar-img"
-                                                onerror="this.src=adminImage2"
+                                                onerror="this.src=window.CART_FALLBACK_IMG"
                                                 src="{{asset('storage/app/public/admin/'.auth('admin')->user()->image)}}"
                                                 alt="Owner image">
                                         </div>
@@ -941,8 +934,16 @@
     <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap&v=3.45.8"></script>
     <script>
         const STORE_LOCATION = {
-            lat: {{ (float)($store['latitude'] ?? 23.757989) }},
-            lng: {{ (float)($store['longitude'] ?? 90.360587) }},
+            lat: {
+                {
+                    (float)($store['latitude'] ?? 23.757989)
+                }
+            },
+            lng: {
+                {
+                    (float)($store['longitude'] ?? 90.360587)
+                }
+            },
         };
 
         let map; // Define map globally if needed, or just let it be handled inside initMap if not used externally.
@@ -1094,6 +1095,7 @@
                     console.error('Failed to load zone coordinates:', xhr.responseText || xhr.statusText);
                 }
             });
+
             @endif
         } // End of initializeMapFeatures
 
