@@ -16,11 +16,12 @@ class AdminMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next)
     {
-        if (Auth::guard('admin')->check()) {
-            return $next($request);
+        if (!auth('admin')->check()) {
+            return redirect()->route('admin.auth.login');
         }
-        return redirect()->route('admin.auth.login');
+
+        return $next($request);
     }
 }

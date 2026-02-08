@@ -250,7 +250,7 @@
         </div>
 
     </main>
-    {{--<nav class="floating-menu">
+    <!-- {{--<nav class="floating-menu">
     <ul class="main-menu">
         @foreach (\App\Models\Module::notParcel()->get() as $module)
         <li>
@@ -266,7 +266,7 @@
     </li>
     </ul>
     <div class="menu-bg"></div>
-    </nav>--}}
+    </nav>--}} -->
     <!-- ========== END MAIN CONTENT ========== -->
 
     <!-- ========== END SECONDARY CONTENTS ========== -->
@@ -416,12 +416,14 @@
             audio.pause();
         }
     </script>
+
+    @if(\App\CentralLogics\Helpers::module_permission_check('order'))
+        @php($admin_order_notification=\App\Models\BusinessSetting::where('key','admin_order_notification')->first())
+        @php($admin_order_notification=$admin_order_notification?$admin_order_notification->value:0)
+        @if($admin_order_notification)
     <script>
         var new_order_type = 'store_order';
-        @if(\App\CentralLogics\Helpers::module_permission_check('order'))
-        @php($admin_order_notification = \App\Models\BusinessSetting::where('key', 'admin_order_notification')->first())
-        @php($admin_order_notification = $admin_order_notification ? $admin_order_notification->value : 0)
-        @if($admin_order_notification)
+
         setInterval(function() {
             $.get({
                 url: "{{route('admin.get-store-data')}}",
@@ -443,9 +445,13 @@
             } else {
                 location.href = "{{route('admin.order.list',['status'=>'all'])}}";
             }
-
         }
+    </script>
         @endif
+    @endif
+
+    <script>
+        var new_order_type = 'store_order';
 
         function route_alert(route, message, title = "{{translate('messages.are_you_sure')}}") {
             Swal.fire({

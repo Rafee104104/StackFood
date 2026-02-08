@@ -2,12 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('/test-auth', function () {
+    dd(
+        auth('admin')->check(),
+        auth('admin')->user()
+    );
+})->middleware('admin');
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
     /*authentication*/
     Route::get('test', function () {
-    return 'Hello tester';
-});
+        return 'Hello tester';
+    });
     Route::group(['namespace' => 'Auth', 'prefix' => 'auth', 'as' => 'auth.'], function () {
         Route::get('login', 'LoginController@login')->name('login');
         Route::post('login', 'LoginController@submit')->middleware('actch');
@@ -15,7 +21,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
     });
     /*authentication*/
 
-    Route::group(['middleware' => ['admin']], function () {
+    Route::group(['middleware' => ['auth:admin']], function () {
+
+
 
         Route::get('settings', 'SystemController@settings')->name('settings');
         Route::post('settings', 'SystemController@settings_update');
@@ -37,7 +45,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::resource('unit', 'UnitController')->middleware('module:unit');
 
-        Route::group(['prefix'=>'parcel','as'=>'parcel.','middleware'=>['module:parcel']], function(){
+        Route::group(['prefix' => 'parcel', 'as' => 'parcel.', 'middleware' => ['module:parcel']], function () {
             Route::get('category/status/{id}/{status}', 'ParcelCategoryController@status')->name('category.status');
             Route::resource('category', 'ParcelCategoryController');
             Route::get('orders', 'ParcelController@orders')->name('orders');
@@ -152,10 +160,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         });
 
         Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
-                Route::get('get-stores-data/{store}', 'VendorController@get_store_data')->name('get-stores-data');
-                Route::get('store-filter/{id}', 'VendorController@store_filter')->name('storefilter');
-                Route::get('get-account-data/{store}', 'VendorController@get_account_data')->name('storefilter');
-                Route::get('get-stores', 'VendorController@get_stores')->name('get-stores');
+            Route::get('get-stores-data/{store}', 'VendorController@get_store_data')->name('get-stores-data');
+            Route::get('store-filter/{id}', 'VendorController@store_filter')->name('storefilter');
+            Route::get('get-account-data/{store}', 'VendorController@get_account_data')->name('storefilter');
+            Route::get('get-stores', 'VendorController@get_stores')->name('get-stores');
             Route::group(['middleware' => ['module:store']], function () {
                 Route::get('update-application/{id}/{status}', 'VendorController@update_application')->name('application');
                 Route::get('add', 'VendorController@index')->name('add');
@@ -190,7 +198,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('withdraw_list', 'VendorController@withdraw')->name('withdraw_list');
                 Route::get('withdraw-view/{withdraw_id}/{seller_id}', 'VendorController@withdraw_view')->name('withdraw_view');
             });
-
         });
 
         Route::group(['prefix' => 'addon', 'as' => 'addon.', 'middleware' => ['module:addon']], function () {
@@ -255,10 +262,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('edit-order/{order}', 'OrderController@edit')->name('edit');
             Route::get('quick-view', 'OrderController@quick_view')->name('quick-view');
             Route::get('quick-view-cart-item', 'OrderController@quick_view_cart_item')->name('quick-view-cart-item');
-            Route::get('export-orders/{file_type}/{status}/{type}','OrderController@export_orders')->name('export');
+            Route::get('export-orders/{file_type}/{status}/{type}', 'OrderController@export_orders')->name('export');
         });
 
-        Route::group(['prefix' => 'dispatch', 'as' => 'dispatch.', 'middleware' => ['module:order']],function(){
+        Route::group(['prefix' => 'dispatch', 'as' => 'dispatch.', 'middleware' => ['module:order']], function () {
             Route::get('list/{status}', 'OrderController@dispatch_list')->name('list');
         });
 
@@ -283,7 +290,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::delete('delete/{id}', 'NotificationController@delete')->name('delete');
         });
 
-        Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings','actch']], function () {
+        Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings', 'actch']], function () {
             Route::get('business-setup', 'BusinessSettingsController@business_index')->name('business-setup');
             Route::get('config-setup', 'BusinessSettingsController@config_setup')->name('config-setup');
             Route::post('config-update', 'BusinessSettingsController@config_update')->name('config-update');
@@ -323,9 +330,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('pages/about-us', 'BusinessSettingsController@about_us')->name('about-us');
             Route::post('pages/about-us', 'BusinessSettingsController@about_us_update');
             // Social media
-            Route::get('social-media/fetch','SocialMediaController@fetch')->name('social-media.fetch');
-            Route::get('social-media/status-update','SocialMediaController@social_media_status_update')->name('social-media.status-update');
-            Route::resource('social-media','SocialMediaController');
+            Route::get('social-media/fetch', 'SocialMediaController@fetch')->name('social-media.fetch');
+            Route::get('social-media/status-update', 'SocialMediaController@social_media_status_update')->name('social-media.status-update');
+            Route::resource('social-media', 'SocialMediaController');
 
             Route::get('sms-module', 'SMSModuleController@sms_index')->name('sms-module');
             Route::post('sms-module-update/{sms_module}', 'SMSModuleController@sms_update')->name('sms-module-update');
@@ -371,29 +378,28 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
             Route::get('subscribed', 'CustomerController@subscribedCustomers')->name('subscribed');
             Route::post('subscriber-search', 'CustomerController@subscriberMailSearch')->name('subscriberMailSearch');
-
         });
         //Pos system
         Route::group(['prefix' => 'pos', 'as' => 'pos.'], function () {
             Route::post('variant_price', 'POSController@variant_price')->name('variant_price');
             // Route::group(['middleware' => ['module:pos']], function () {
-                Route::get('/', 'POSController@index')->name('index');
-                Route::get('quick-view', 'POSController@quick_view')->name('quick-view');
-                Route::get('quick-view-cart-item', 'POSController@quick_view_card_item')->name('quick-view-cart-item');
-                Route::post('add-to-cart', 'POSController@addToCart')->name('add-to-cart');
-                Route::post('remove-from-cart', 'POSController@removeFromCart')->name('remove-from-cart');
-                Route::post('cart-items', 'POSController@cart_items')->name('cart_items');
-                Route::post('update-quantity', 'POSController@updateQuantity')->name('updateQuantity');
-                Route::post('empty-cart', 'POSController@emptyCart')->name('emptyCart');
-                Route::post('tax', 'POSController@update_tax')->name('tax');
-                Route::post('discount', 'POSController@update_discount')->name('discount');
-                Route::get('customers', 'POSController@get_customers')->name('customers');
-                Route::post('order', 'POSController@place_order')->name('order');
-                Route::get('orders', 'POSController@order_list')->name('orders');
-                Route::post('search', 'POSController@search')->name('search');
-                Route::get('order-details/{id}', 'POSController@order_details')->name('order-details');
-                Route::get('invoice/{id}', 'POSController@generate_invoice');
-                Route::post('customer-store', 'POSController@customer_store')->name('customer-store');
+            Route::get('/', 'POSController@index')->name('index');
+            Route::get('quick-view', 'POSController@quick_view')->name('quick-view');
+            Route::get('quick-view-cart-item', 'POSController@quick_view_card_item')->name('quick-view-cart-item');
+            Route::post('add-to-cart', 'POSController@addToCart')->name('add-to-cart');
+            Route::post('remove-from-cart', 'POSController@removeFromCart')->name('remove-from-cart');
+            Route::post('cart-items', 'POSController@cart_items')->name('cart_items');
+            Route::post('update-quantity', 'POSController@updateQuantity')->name('updateQuantity');
+            Route::post('empty-cart', 'POSController@emptyCart')->name('emptyCart');
+            Route::post('tax', 'POSController@update_tax')->name('tax');
+            Route::post('discount', 'POSController@update_discount')->name('discount');
+            Route::get('customers', 'POSController@get_customers')->name('customers');
+            Route::post('order', 'POSController@place_order')->name('order');
+            Route::get('orders', 'POSController@order_list')->name('orders');
+            Route::post('search', 'POSController@search')->name('search');
+            Route::get('order-details/{id}', 'POSController@order_details')->name('order-details');
+            Route::get('invoice/{id}', 'POSController@generate_invoice');
+            Route::post('customer-store', 'POSController@customer_store')->name('customer-store');
             // });
         });
 

@@ -8,7 +8,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Gregwar\Captcha\CaptchaBuilder;
 use Illuminate\Support\Facades\Session;
 use App\CentralLogics\Helpers;
-
+use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     public function __construct()
@@ -34,38 +34,40 @@ class LoginController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        $recaptcha = Helpers::get_business_settings('recaptcha');
-        if (isset($recaptcha) && $recaptcha['status'] == 1) {
-            $request->validate([
-                'g-recaptcha-response' => [
-                    function ($attribute, $value, $fail) {
-                        $secret_key = env('SECRET_KEY');
-                        $response = $value;
-                        $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $response;
-                        $response = \file_get_contents($url);
-                        $response = json_decode($response);
-                        if (!$response->success) {
-                            $fail(translate('messages.ReCAPTCHA Failed'));
-                        }
-                    },
-                ],
-            ]);
-        } else if (strtolower(session('six_captcha')) != strtolower($request->custome_recaptcha)) {
-            Toastr::error(translate('messages.ReCAPTCHA Failed'));
-            return back();
-        }
+        // $recaptcha = Helpers::get_business_settings('recaptcha');
+        // if (isset($recaptcha) && $recaptcha['status'] == 1) {
+        //     $request->validate([
+        //         'g-recaptcha-response' => [
+        //             function ($attribute, $value, $fail) {
+        //                 $secret_key = env('SECRET_KEY');
+        //                 $response = $value;
+        //                 $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $response;
+        //                 $response = \file_get_contents($url);
+        //                 $response = json_decode($response);
+        //                 if (!$response->success) {
+        //                     $fail(translate('messages.ReCAPTCHA Failed'));
+        //                 }
+        //             },
+        //         ],
+        //     ]);
+        // } else if (strtolower(session('six_captcha')) != strtolower($request->custome_recaptcha)) {
+        //     Toastr::error(translate('messages.ReCAPTCHA Failed'));
+        //     return back();
+        // }
 
-        if (auth('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+        // if (auth('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+        //     return redirect()->route('admin.dashboard');
+        // }
+        if (Auth::guard('admin')->attempt(credentials: ['email' => $request->email, 'password' => $request->password], remember: $request->remember)) {
             return redirect()->route('admin.dashboard');
         }
-
         return redirect()->back()->withInput($request->only('email', 'remember'))
             ->withErrors(['Credentials does not match.']);
     }
 
     public function logout(Request $request)
     {
-        auth()->guard('admin')->logout();
+        Auth::guard('admin')->logout();
         return redirect()->route('admin.auth.login');
     }
 }

@@ -29,19 +29,42 @@
 
     @stack('scripts')
     <title>@yield('title')</title>
+    <!-- htmlhint css-ruleorselectorexpected:false, css-propertyvalueexpected:false -->
     <style>
         html,
-        body {
-            background-color: {{ isset($background_Change['landing-page-bg']) ? $background_Change['landing-page-bg'] : '#ffffff' }};
-        }
+        :root {
+        --landing-page-bg: {{ $background_Change['landing-page-bg'] ?? '#ffffff' }};
+        --header-bg: {{ $background_Change['header-bg'] ?? '#02592f' }};
+        --footer-bg: {{ $background_Change['footer-bg'] ?? '#57665F' }};
+    }
+
+    body {
+        background-color: var(--landing-page-bg);
+    }
+
+    .top-nav-bg {
+        background-color: var(--header-bg);
+    }
+
+    .footer-bg {
+        background-color: var(--footer-bg);
+    }
 
         .dropdown-menu.show,
+        :root {
+        --top-nav-bg: {{ $background_Change['header-bg'] ?? '#02592f' }};
+        }
+
         .top-nav-bg {
-            background-color: {{ isset($background_Change['header-bg']) ? $background_Change['header-bg'] : '#02592f' }};
+            background-color: var(--top-nav-bg);
+        }
+
+        :root {
+        --footer-bg: {{ $background_Change['footer-bg'] ?? '#57665F' }};
         }
 
         .footer-bg {
-            background-color: {{ isset($background_Change['footer-bg']) ? $background_Change['footer-bg'] : '#57665F' }};
+            background-color: var(--footer-bg);
         }
 
         .owl-theme .owl-controls .owl-buttons,

@@ -1311,4 +1311,6 @@
   'password_mismatch' => 'Password did,t match!',
   'Enter order verification code' => 'Enter order verification code',
   'Your browser doesn,t support geolocation' => 'Your browser doesn t support geolocation',
+  'Forbidden' => 'Forbidden',
+  'Unauthorized: You do not have access to this module.' => 'Unauthorized: You do not have access to this module.',
 );

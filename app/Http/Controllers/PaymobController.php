@@ -73,6 +73,7 @@ class PaymobController extends Controller
         }
         return \Redirect::away('https://portal.weaccept.co/api/acceptance/iframes/' . $config['iframe_id'] . '?payment_token=' . $paymentToken);
     }
+    
 
     public function getToken()
     {

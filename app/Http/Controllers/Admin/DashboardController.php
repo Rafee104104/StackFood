@@ -125,8 +125,7 @@ class DashboardController extends Controller
             $refunded = Order::Refunded();
         }
 
-        if(is_numeric($zone_id))
-        {
+        if (is_numeric($zone_id)) {
             $searching_for_dm = $searching_for_dm->StoreOrder()->OrderScheduledIn(30)->where('zone_id', $zone_id)->count();
             $accepted_by_dm = $accepted_by_dm->StoreOrder()->where('zone_id', $zone_id)->count();
             $preparing_in_rs = $preparing_in_rs->StoreOrder()->where('zone_id', $zone_id)->count();
@@ -135,9 +134,7 @@ class DashboardController extends Controller
             $canceled = $canceled->StoreOrder()->where('zone_id', $zone_id)->count();
             $refund_requested = $refund_requested->StoreOrder()->where('zone_id', $zone_id)->count();
             $refunded = $refunded->StoreOrder()->where('zone_id', $zone_id)->count();
-        }
-        else
-        {
+        } else {
             $searching_for_dm = $searching_for_dm->StoreOrder()->OrderScheduledIn(30)->count();
             $accepted_by_dm = $accepted_by_dm->StoreOrder()->count();
             $preparing_in_rs = $preparing_in_rs->StoreOrder()->count();
@@ -145,7 +142,7 @@ class DashboardController extends Controller
             $delivered = $delivered->StoreOrder()->count();
             $canceled = $canceled->StoreOrder()->count();
             $refund_requested = $refund_requested->StoreOrder()->count();
-            $refunded = $refunded->StoreOrder()->count();            
+            $refunded = $refunded->StoreOrder()->count();
         }
 
 
@@ -166,14 +163,11 @@ class DashboardController extends Controller
     {
         $params = session('dash_params');
         //zone
-        if(is_numeric($zone_id))
-        {
+        if (is_numeric($zone_id)) {
             $customer = User::where('zone_id', $zone_id);
             $stores = Store::where(['zone_id' => $zone_id]);
             $delivery_man = DeliveryMan::where('zone_id', $zone_id)->Zonewise();
-        }
-        else
-        {
+        } else {
             $customer = User::whereNotNull('id');
             $stores = Store::whereNotNull('id');
             $delivery_man = DeliveryMan::Zonewise();
@@ -207,16 +201,16 @@ class DashboardController extends Controller
         $data_uo = self::user_overview_calc($params['zone_id']);
 
         $popular = Wishlist::with(['store'])
-        ->whereHas('store')
-        ->when(is_numeric($params['zone_id']), function($q)use($params){
-            return $q->whereHas('store', function($query)use($params){
-                return $query->where('zone_id', $params['zone_id']);
-            });
-        })
-        ->select('store_id', DB::raw('COUNT(store_id) as count'))->groupBy('store_id')->orderBy('count', 'DESC')->limit(6)->get();
+            ->whereHas('store')
+            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                return $q->whereHas('store', function ($query) use ($params) {
+                    return $query->where('zone_id', $params['zone_id']);
+                });
+            })
+            ->select('store_id', DB::raw('COUNT(store_id) as count'))->groupBy('store_id')->orderBy('count', 'DESC')->limit(6)->get();
         $top_sell = Item::withoutGlobalScopes()
-            ->when(is_numeric($params['zone_id']),function($q)use($params){
-                return $q->whereHas('store', function($query)use($params){
+            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                return $q->whereHas('store', function ($query) use ($params) {
                     return $query->where('zone_id', $params['zone_id']);
                 });
             })
@@ -224,17 +218,16 @@ class DashboardController extends Controller
             ->take(6)
             ->get();
         $top_rated_foods = Item::withoutGlobalScopes()
-            ->when(is_numeric($params['zone_id']),function($q)use($params){
-                return $q->whereHas('store', function($query)use($params){
+            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                return $q->whereHas('store', function ($query) use ($params) {
                     return $query->where('zone_id', $params['zone_id']);
                 });
             })
-            ->orderBy('rating_count','desc')
+            ->orderBy('rating_count', 'desc')
             ->take(6)
             ->get();
 
-        $top_deliveryman = DeliveryMan::
-            when(is_numeric($params['zone_id']), function($q)use($params){
+        $top_deliveryman = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
                 return $q->where('zone_id', $params['zone_id']);
             })
             ->Zonewise()
@@ -242,8 +235,7 @@ class DashboardController extends Controller
             ->take(6)
             ->get();
 
-        $top_restaurants = Store::
-            when(is_numeric($params['zone_id']), function($q)use($params){
+        $top_restaurants = Store::when(is_numeric($params['zone_id']), function ($q) use ($params) {
                 return $q->where('zone_id', $params['zone_id']);
             })
             ->orderBy("order_count", 'desc')
@@ -254,13 +246,13 @@ class DashboardController extends Controller
         $commission = [];
         for ($i = 1; $i <= 12; $i++) {
             $total_sell[$i] = OrderTransaction::NotRefunded()
-                ->when(is_numeric($params['zone_id']), function($q)use($params){
+                ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
                     return $q->where('zone_id', $params['zone_id']);
                 })
                 ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
                 ->sum('order_amount');
             $commission[$i] = OrderTransaction::NotRefunded()
-                ->when(is_numeric($params['zone_id']), function($q)use($params){
+                ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
                     return $q->where('zone_id', $params['zone_id']);
                 })
                 ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))

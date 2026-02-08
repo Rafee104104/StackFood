@@ -210,7 +210,7 @@
                 }
             });
             $.post({
-                url: '{{route('vendor.delivery-man.store')}}',
+                url: :"{{route('vendor.delivery-man.store')}}",
                 // data: $('#food_form').serialize(),
                 data: formData,
                 cache: false,
@@ -230,7 +230,7 @@
                             ProgressBar: true
                         });
                         setTimeout(function () {
-                            location.href = '{{route('vendor.delivery-man.list')}}';
+                            location.href = "{{route('vendor.delivery-man.list')}}";
                         }, 2000);
                     }
                 }

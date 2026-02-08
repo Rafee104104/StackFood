@@ -407,7 +407,7 @@
                 }
             });
             $.post({
-                url: '{{route('admin.addon.search')}}',
+                url: "{{route('admin.addon.search')}}",
                 data: formData,
                 cache: false,
                 contentType: false,

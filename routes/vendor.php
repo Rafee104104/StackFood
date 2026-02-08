@@ -16,11 +16,11 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
     });
     /*authentication*/
 
-    Route::group(['middleware' => ['vendor']], function () {
+    Route::group(['middleware' => ['auth:vendor']], function () {
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');
         Route::get('/get-store-data', 'DashboardController@store_data')->name('get-store-data');
         Route::get('/reviews', 'ReviewController@index')->name('reviews')->middleware('module:reviews');
-        
+
 
         Route::group(['prefix' => 'pos', 'as' => 'pos.'], function () {
             Route::post('variant_price', 'POSController@variant_price')->name('variant_price');
@@ -105,7 +105,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('view/{id}', 'ItemController@view')->name('view');
             Route::get('remove-image', 'ItemController@remove_image')->name('remove-image');
             Route::get('get-categories', 'ItemController@get_categories')->name('get-categories');
-            
+
             //Import and export
             Route::get('bulk-import', 'ItemController@bulk_import_index')->name('bulk-import');
             Route::post('bulk-import', 'ItemController@bulk_import_data');
@@ -149,7 +149,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::delete('delete/{id}', 'AddOnController@delete')->name('delete');
         });
 
-        Route::group(['prefix' => 'order', 'as' => 'order.' , 'middleware' => ['module:order']], function () {
+        Route::group(['prefix' => 'order', 'as' => 'order.', 'middleware' => ['module:order']], function () {
             Route::get('list/{status}', 'OrderController@list')->name('list');
             Route::put('status-update/{id}', 'OrderController@status')->name('status-update');
             Route::post('search', 'OrderController@search')->name('search');
@@ -163,6 +163,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('quick-view-cart-item', 'OrderController@quick_view_cart_item')->name('quick-view-cart-item');
             Route::get('generate-invoice/{id}', 'OrderController@generate_invoice')->name('generate-invoice');
             Route::post('add-payment-ref-code/{id}', 'OrderController@add_payment_ref_code')->name('add-payment-ref-code');
+            Route::post('add-delivery-man', 'OrderController@addDeliveryMan')->name('add-delivery-man');
         });
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:store_setup']], function () {
@@ -189,6 +190,5 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('edit', 'RestaurantController@edit')->name('edit');
             Route::post('update', 'RestaurantController@update')->name('update');
         });
-
     });
 });

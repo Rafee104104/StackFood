@@ -130,6 +130,7 @@
     <script>
         window.CART_FALLBACK_IMG = "{{ asset('assets/admin/img/160x160/img1.jpg') }}";
     </script>
+
     {{--loader--}}
     <div class="container">
         <div class="row">
@@ -378,7 +379,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">{{translate('add_new_customer')}}</h5>
+                        <h5 class="modal-title">{{ translate('messages.add_new_customer') }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -437,24 +438,26 @@
     {!! Toastr::message() !!}
 
 
-    <!-- @if($errors->any())
+    @if($errors->any())
+
+        @foreach ($errors->all() as $error)
     <script>
-        @foreach($errors->all() as $error)
+        toastr.error(@json($error), 'Error', {
+            closeButton: true,
+            progressBar: true
+        });
+    </script>
+@endforeach
+
+    @endif
+    <!-- @foreach($errors->all() as $error)
+    <script>
         toastr.error('{{$error}}', 'Error', {
             CloseButton: true,
             ProgressBar: true
         });
-        @endforeach
     </script>
-    @endif -->
-    @foreach($errors->all() as $error)
-    <script>
-        toastr.error('{{$error}}', 'Error', {
-            CloseButton: true,
-            ProgressBar: true
-        });
-    </script>
-    @endforeach
+    @endforeach -->
     <!-- JS Plugins Init. -->
 
     <script>
@@ -862,7 +865,7 @@
                 }
             }
 
-        };
+        }
 
         // INITIALIZATION OF SELECT2
         // =======================================================
@@ -925,25 +928,39 @@
             });
         }
     </script>
+
+
     @if(session('last_order'))
     <script>
         print_invoice("{{session('last_order')}}");
     </script>
     @php(session(['last_order' => false]))
     @endif
-    <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap&v=3.45.8"></script>
     <script>
+        window.APP_STATE = <?php echo json_encode([
+                                'hasStore' => (bool) $store,
+                                'zoneId'   => $store ? $store->zone_id : null,
+                                'lat'      => $store->latitude ?? 23.757989,
+                                'lng'      => $store->longitude ?? 90.360587,
+                            ]); ?>;
+    </script>
+
+
+
+    <!-- Google Map -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap"
+        async
+        defer>
+    </script>
+
+    <script>
+        const HAS_STORE = window.APP_STATE.hasStore;
+        const STORE_ZONE_ID = window.APP_STATE.zoneId;
+
         const STORE_LOCATION = {
-            lat: {
-                {
-                    (float)($store['latitude'] ?? 23.757989)
-                }
-            },
-            lng: {
-                {
-                    (float)($store['longitude'] ?? 90.360587)
-                }
-            },
+            lat: Number(window.APP_STATE.lat),
+            lng: Number(window.APP_STATE.lng)
         };
 
         let map; // Define map globally if needed, or just let it be handled inside initMap if not used externally.
@@ -961,13 +978,12 @@
         }
 
         function initializeMapFeatures(map) {
-            let infoWindow = new google.maps.InfoWindow();
+            const infoWindow = new google.maps.InfoWindow();
 
-            // Try HTML5 geolocation.
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
-                        myLatlng = {
+                        const myLatlng = {
                             lat: position.coords.latitude,
                             lng: position.coords.longitude,
                         };
@@ -976,128 +992,66 @@
                         infoWindow.open(map);
                         map.setCenter(myLatlng);
                     },
-                    () => {
-                        handleLocationError(true, infoWindow, map.getCenter());
-                    }
+                    () => handleLocationError(true, infoWindow, map.getCenter())
                 );
-            } else {
-                // Browser doesn't support Geolocation
-                handleLocationError(false, infoWindow, map.getCenter());
             }
-            //-----end block------
+
             const input = document.getElementById("pac-input");
+            if (!input) return;
+
             const searchBox = new google.maps.places.SearchBox(input);
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+
             let markers = [];
             const bounds = new google.maps.LatLngBounds();
+
             searchBox.addListener("places_changed", () => {
                 const places = searchBox.getPlaces();
+                if (!places || !places.length) return;
 
-                if (places.length == 0) {
-                    return;
-                }
-                // Clear out the old markers.
-                markers.forEach((marker) => {
-                    marker.setMap(null);
-                });
+                markers.forEach(m => m.setMap(null));
                 markers = [];
-                // For each place, get the icon, name and location.
-                places.forEach((place) => {
-                    document.getElementById('latitude').value = place.geometry.location.lat();
-                    document.getElementById('longitude').value = place.geometry.location.lng();
-                    if (!place.geometry || !place.geometry.location) {
-                        console.log("Returned place contains no geometry");
-                        return;
-                    }
-                    const icon = {
-                        url: place.icon,
-                        size: new google.maps.Size(71, 71),
-                        origin: new google.maps.Point(0, 0),
-                        anchor: new google.maps.Point(17, 34),
-                        scaledSize: new google.maps.Size(25, 25),
-                    };
-                    // Create a marker for each place.
-                    markers.push(
-                        new google.maps.Marker({
-                            map,
-                            icon,
-                            title: place.name,
-                            position: place.geometry.location,
-                        })
-                    );
 
-                    if (place.geometry.viewport) {
-                        // Only geocodes have viewport.
-                        bounds.union(place.geometry.viewport);
-                    } else {
-                        bounds.extend(place.geometry.location);
-                    }
+                places.forEach(place => {
+                    if (!place.geometry) return;
+
+                    const marker = new google.maps.Marker({
+                        map,
+                        title: place.name,
+                        position: place.geometry.location
+                    });
+
+                    markers.push(marker);
+                    bounds.extend(place.geometry.location);
                 });
+
                 map.fitBounds(bounds);
             });
-            @if($store)
-            $.ajax({
-                type: 'GET',
-                url: "{{ url('/admin/zone/get-coordinates/' . $store->zone_id) }}",
-                dataType: 'json',
-                success: function(data) {
 
-                    if (!data || !data.coordinates || !data.coordinates.length) {
-                        console.error('Zone coordinates not found!', data);
-                        return;
-                    }
+            if (HAS_STORE && STORE_ZONE_ID) {
+                $.getJSON(`/admin/zone/get-coordinates/${STORE_ZONE_ID}`, function(data) {
+                    if (!data?.coordinates?.length) return;
 
-                    const bounds = new google.maps.LatLngBounds();
+                    const zoneBounds = new google.maps.LatLngBounds();
 
-                    const zonePolygon = new google.maps.Polygon({
+                    const polygon = new google.maps.Polygon({
                         paths: data.coordinates,
                         strokeColor: "#FF0000",
                         strokeOpacity: 0.8,
                         strokeWeight: 2,
-                        fillColor: "#ffffff",
                         fillOpacity: 0
                     });
 
-                    zonePolygon.setMap(map);
+                    polygon.setMap(map);
 
-                    // Extend bounds with all polygon points (fit once, not on every point)
-                    zonePolygon.getPaths().forEach(function(path) {
-                        path.forEach(function(latlng) {
-                            bounds.extend(latlng);
-                        });
-                    });
+                    polygon.getPaths().forEach(path =>
+                        path.forEach(latlng => zoneBounds.extend(latlng))
+                    );
 
-                    map.fitBounds(bounds);
-
-                    // Optional center (only if backend provides it)
-                    if (data.center && typeof data.center.lat !== 'undefined' && typeof data.center.lng !== 'undefined') {
-                        map.setCenter(data.center);
-                    }
-
-                    // Make sure infoWindow exists
-                    if (!window.zoneInfoWindow) {
-                        window.zoneInfoWindow = new google.maps.InfoWindow();
-                    }
-
-                    google.maps.event.addListener(zonePolygon, 'click', function(e) {
-                        const coords = e.latLng.toJSON(); // {lat: number, lng: number}
-
-                        document.getElementById('latitude').value = coords.lat;
-                        document.getElementById('longitude').value = coords.lng;
-
-                        window.zoneInfoWindow.close();
-                        window.zoneInfoWindow.setPosition(e.latLng);
-                        window.zoneInfoWindow.setContent('Lat: ' + coords.lat + '<br>Lng: ' + coords.lng);
-                        window.zoneInfoWindow.open(map);
-                    });
-                },
-                error: function(xhr) {
-                    console.error('Failed to load zone coordinates:', xhr.responseText || xhr.statusText);
-                }
-            });
-
-            @endif
-        } // End of initializeMapFeatures
+                    map.fitBounds(zoneBounds);
+                });
+            }
+        }
 
 
         function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -1117,6 +1071,39 @@
         })
     </script>
 
+    <script>
+        (function(g) {
+            var h, a, k, p = "The Google Maps JavaScript API",
+                c = "google",
+                l = "importLibrary",
+                q = "__ib__",
+                m = document,
+                b = window;
+            b = b[c] || (b[c] = {});
+            var d = b.maps || (b.maps = {}),
+                r = new Set,
+                e = new URLSearchParams,
+                u = () => h || (h = new Promise(async (f, n) => {
+                    await (a = m.createElement("script"));
+                    e.set("libraries", [...r] + "");
+                    for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                    e.set("callback", c + ".maps." + q);
+                    a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                    d[q] = f;
+                    a.onerror = () => h = n(Error(p + " could not load."));
+                    a.async = true;
+                    m.head.append(a);
+                }));
+            d[l] ? console.warn(p + " only loads once.") : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n));
+        })({
+            key: "{{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}",
+        });
+    </script>
+
+
+    <script>
+        console.log('Google Maps loaded:', typeof google !== 'undefined');
+    </script>
     @if(config('services.recaptcha.site_key'))
     <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
     @endif

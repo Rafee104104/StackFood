@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use App\Scopes\StoreScope;
 use Rap2hpoutre\FastExcel\FastExcel;
 
+
 class OrderController extends Controller
 {
     public function list($status, Request $request)
