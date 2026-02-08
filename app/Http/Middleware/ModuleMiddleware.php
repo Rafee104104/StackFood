@@ -5,7 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Log;
+use App\Models\BusinessSetting;
 class ModuleMiddleware
 {
     /**
@@ -16,21 +17,28 @@ class ModuleMiddleware
      * @param  string  $module
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $module)
-    {
-        $user = Auth::user();
 
-        if (!$user) {
-            // যদি user login না থাকে
-            return redirect()->route('admin.auth.login');
-        }
+    public function handle($request, Closure $next, $module)
+{
+    $admin = auth('admin')->user();
 
-        // Example: Check if user has permission for the module
-        // তোমার বাস্তব logic অনুযায়ী পরিবর্তন করতে হবে
-        if (!in_array($module, $user->modules ?? [])) {
-            abort(403, 'Unauthorized: You do not have access to this module.');
-        }
+    if (!$admin) {
+        abort(403);
+    }
 
+    // SUPER ADMIN BYPASS
+    if ($admin->role_id == 1) {
         return $next($request);
     }
+
+    $setting = BusinessSetting::where('key', $module)->first();
+
+    if (!$setting || $setting->value != 1) {
+        abort(403);
+    }
+
+    abort(403); // other roles blocked for now
+}
+
+
 }
