@@ -210,7 +210,7 @@
                 }
             });
             $.post({
-                url: :"{{route('vendor.delivery-man.store')}}",
+                url: : "{{route('vendor.delivery-man.store')}}",
                 // data: $('#food_form').serialize(),
                 data: formData,
                 cache: false,

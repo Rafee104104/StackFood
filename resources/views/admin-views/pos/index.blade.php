@@ -440,15 +440,14 @@
 
     @if($errors->any())
 
-        @foreach ($errors->all() as $error)
-    <script>
-        toastr.error(@json($error), 'Error', {
-            closeButton: true,
-            progressBar: true
+        @foreach($errors->all() as $error)
+        <script>
+        toastr.error('{{$error}}', 'Error', {
+            CloseButton: true,
+            ProgressBar: true
         });
-    </script>
-@endforeach
-
+        </script>
+        @endforeach
     @endif
     <!-- @foreach($errors->all() as $error)
     <script>

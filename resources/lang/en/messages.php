@@ -1313,4 +1313,7 @@
   'Your browser doesn,t support geolocation' => 'Your browser doesn t support geolocation',
   'Forbidden' => 'Forbidden',
   'Unauthorized: You do not have access to this module.' => 'Unauthorized: You do not have access to this module.',
+  'store_logo' => 'Store logo',
+  'Export Restaurants' => 'Export Restaurants',
+  'Permission denied! please contact to admin' => 'Permission denied! please contact to admin',
 );

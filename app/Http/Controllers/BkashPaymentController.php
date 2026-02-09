@@ -8,6 +8,7 @@ use App\Models\Order;
 
 class BkashPaymentController extends Controller
 {
+
     private $base_url;
     private $app_key;
     private $app_secret;
@@ -16,23 +17,51 @@ class BkashPaymentController extends Controller
 
     public function __construct()
     {
-        $config=\App\CentralLogics\Helpers::get_business_settings('bkash');
-        // You can import it from your Database
-        $bkash_app_key = $config['api_key']; // bKash Merchant API APP KEY
-        $bkash_app_secret = $config['api_secret']; // bKash Merchant API APP SECRET
-        $bkash_username = $config['username']; // bKash Merchant API USERNAME
-        $bkash_password = $config['password']; // bKash Merchant API PASSWORD
-        $bkash_base_url = (env('APP_MODE') == 'live') ? 'https://checkout.pay.bka.sh/v1.2.0-beta' : 'https://checkout.sandbox.bka.sh/v1.2.0-beta';
+        $config = Helpers::get_business_settings('bkash') ?? [];
 
-        $this->app_key = $bkash_app_key;
-        $this->app_secret = $bkash_app_secret;
-        $this->username = $bkash_username;
-        $this->password = $bkash_password;
-        $this->base_url = $bkash_base_url;
+        $this->app_key    = $config['api_key']    ?? null;
+        $this->app_secret = $config['api_secret'] ?? null;
+        $this->username   = $config['username']   ?? null;
+        $this->password   = $config['password']   ?? null;
+
+        $this->base_url = (env('APP_MODE') === 'live')
+            ? 'https://checkout.pay.bka.sh/v1.2.0-beta'
+            : 'https://checkout.sandbox.bka.sh/v1.2.0-beta';
     }
+
+    // public function __construct()
+    // {
+    //     // $config = \App\CentralLogics\Helpers::get_business_settings('bkash');
+    //     // // You can import it from your Database
+    //     // $bkash_app_key = $config['api_key']; // bKash Merchant API APP KEY
+    //     // $bkash_app_secret = $config['api_secret']; // bKash Merchant API APP SECRET
+    //     // $bkash_username = $config['username']; // bKash Merchant API USERNAME
+    //     // $bkash_password = $config['password']; // bKash Merchant API PASSWORD
+    //     // $bkash_base_url = (env('APP_MODE') == 'live') ? 'https://checkout.pay.bka.sh/v1.2.0-beta' : 'https://checkout.sandbox.bka.sh/v1.2.0-beta';
+
+    //     // $this->app_key = $bkash_app_key;
+    //     // $this->app_secret = $bkash_app_secret;
+    //     // $this->username = $bkash_username;
+    //     // $this->password = $bkash_password;
+    //     // $this->base_url = $bkash_base_url;
+
+    //     $config = \App\CentralLogics\Helpers::get_business_settings('bkash') ?? [];
+
+    //     $this->bkash_app_key    = $config['api_key']    ?? null;
+    //     $this->bkash_app_secret = $config['api_secret'] ?? null;
+    //     $this->bkash_username  = $config['username']   ?? null;
+    //     $this->bkash_password  = $config['password']   ?? null;
+    // }
 
     public function getToken()
     {
+        if (!$this->app_key || !$this->app_secret) {
+            return response()->json([
+                'message' => 'Bkash is not configured'
+            ], 500);
+        }
+
+
         session()->forget('bkash_token');
 
         $post_token = array(
@@ -139,7 +168,7 @@ class BkashPaymentController extends Controller
 
     public function bkashSuccess(Request $request)
     {
-        $order = Order::with(['details'])->where(['id' => session('order_id'), 'user_id'=>session('customer_id')])->first();
+        $order = Order::with(['details'])->where(['id' => session('order_id'), 'user_id' => session('customer_id')])->first();
         $order->transaction_reference = $request->trxID;
         $order->payment_method = 'bkash';
         $order->payment_status = 'paid';
@@ -150,4 +179,3 @@ class BkashPaymentController extends Controller
         return response()->json(['status' => true]);
     }
 }
-
