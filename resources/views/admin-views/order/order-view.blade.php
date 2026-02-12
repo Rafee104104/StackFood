@@ -19,7 +19,7 @@
 
 @section('content')
     <?php
-    $campaign_order = isset($order->details[0]->campaign) ? true : false;
+    $campaign_order = optional($order->details->first())->campaign ? true : false;
     $parcel_order = $order->order_type == 'parcel' ? true : false;
     ?>
     <div class="content container-fluid">
@@ -200,7 +200,7 @@
                                     <span
                                         class="badge badge-soft-dark rounded-circle ml-1">{{ $order->details->count() }}</span>
                                 </h4>
-                                @if (!$parcel_order && !$editing && in_array($order->order_status, ['pending', 'confirmed', 'processing', 'accepted']) && isset($order->store))
+                                @if (!$parcel_order && !($editing ?? false) && in_array($order->order_status, ['pending', 'confirmed', 'processing', 'accepted']) && isset($order->store))
                                     <button class="btn btn-sm btn-primary" type="button" onclick="edit_order()">
                                         <i class="tio-edit"></i> {{ translate('messages.edit') }}
                                     </button>
