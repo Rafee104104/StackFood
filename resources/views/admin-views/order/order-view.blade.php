@@ -965,7 +965,12 @@
                             <hr>
                             <span class="d-block">
                                 <a target="_blank"
-                                    href="http://maps.google.com/maps?z=12&t=m&q=loc:{{ $order->store['latitude'] }}+{{ $order->store['longitude'] }}">
+                                    @if($order->store && $order->store->latitude && $order->store->longitude)
+                                        <a target="_blank"
+                                            href="http://maps.google.com/maps?z=12&t=m&q=loc:{{ $order->store->latitude }}+{{ $order->store->longitude }}">
+                                            <i class="tio-map"></i> {{ $order->store->address }}
+                                        </a>
+                                    @endif
                                     <i class="tio-map"></i> {{ $order->store['address'] }}<br>
                                 </a>
                             </span>
