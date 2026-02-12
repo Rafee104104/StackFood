@@ -842,7 +842,17 @@
 
                             @if ($order->delivery_address)
                                 <hr>
-                                @php($address = json_decode($order->delivery_address, true))
+                                @php($address = json_decode($order->delivery_address ?? '', true) ?? [])
+                                @if (!empty($address))
+                                    {{ translate('messages.name') }}:
+                                    {{ $address['contact_person_name'] ?? '' }}<br>
+
+                                    {{ translate('messages.contact') }}:
+                                    <a href="tel:{{ $address['contact_person_number'] ?? '' }}">
+                                        {{ $address['contact_person_number'] ?? '' }}
+                                    </a><br>
+                                @endif
+
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5>{{ translate($parcel_order ? 'messages.sender' : 'messages.delivery') }}
                                         {{ translate('messages.info') }}</h5>
@@ -876,13 +886,16 @@
                             @endif
                             @if ($order->receiver_details)
                                 <hr>
-                                @php($receiver_details = $order->receiver_details)
+                                @php($receiver_details = is_array($order->receiver_details)
+                                    ? $order->receiver_details
+                                    : (json_decode($order->receiver_details ?? '', true) ?? []))
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5>{{ translate('messages.receiver') }} {{ translate('messages.info') }}</h5>
                                 </div>
                                 @if (isset($receiver_details))
                                     <span class="d-block">
-                                        {{ translate('messages.name') }}: {{ $receiver_details['contact_person_name'] }}<br>
+                                        {{ translate('messages.name') }}: {{ $receiver_details['contact_person_name'] ?? '' }}
+<br>
                                         {{ translate('messages.contact') }}:<a class="deco-none"
                                             href="tel:{{ $receiver_details['contact_person_number'] }}">
                                             {{ $receiver_details['contact_person_number'] }}</a><br>
@@ -920,8 +933,9 @@
                                 <div class="avatar avatar-circle mr-3">
                                     <img class="avatar-img" style="width: 75px"
                                         onerror="this.src='{{ asset('assets/admin/img/160x160/img1.jpg') }}'"
-                                        src="{{ asset('storage/store/' . $order->store->logo) }}"
-                                        alt="Image Description">
+                                        src="{{ $order->store && $order->store->logo
+                                            ? asset('storage/store/' . $order->store->logo)
+                                            : asset('assets/admin/img/160x160/img1.jpg') }}"alt="Image Description">
                                 </div>
                                 <div class="media-body">
                                     <span
