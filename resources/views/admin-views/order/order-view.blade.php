@@ -512,15 +512,17 @@
                                                 <span class="avatar-status avatar-lg-status avatar-status-dark"><i
                                                         class="tio-edit"></i></span>
                                                 <img class="img-fluid"
-                                                    src="{{ asset('storage/campaign') }}/{{ $detail->campaign['image'] }}"
+                                                    src="{{ asset('storage/campaign') }}/{{ isset($detail->campaign['image']) ? $detail->campaign['image'] : ''
+ }}"
                                                     onerror="this.src='{{ asset('assets/admin/img/160x160/img2.jpg') }}'"
                                                     alt="Image Description">
                                             </div>
                                         @else
                                             <a class="avatar avatar-xl mr-3"
-                                                href="{{ route('admin.campaign.view', ['item', $detail->campaign['id']]) }}">
+                                                href="{{ route('admin.campaign.view', ['item', isset($detail->campaign['id']) ? $detail->campaign['id'] : '']) }}">
                                                 <img class="img-fluid"
-                                                    src="{{ asset('storage/campaign') }}/{{ $detail->campaign['image'] }}"
+                                                    src="{{ asset('storage/campaign') }}/{{isset($detail->campaign['image']) ? $detail->campaign['image'] : ''
+ }}"
                                                     onerror="this.src='{{ asset('assets/admin/img/160x160/img2.jpg') }}'"
                                                     alt="Image Description">
                                             </a>
@@ -531,7 +533,7 @@
                                             <div class="row">
                                                 <div class="col-md-6 mb-3 mb-md-0">
                                                     <strong>
-                                                        {{ Str::limit($detail->campaign['name'], 20, '...') }}</strong><br>
+                                                        {{ Str::limit(isset($detail->campaign['name']) ? $detail->campaign['name'] : '', 20, '...') }}</strong><br>
 
                                                     @if (count(json_decode($detail['variation'], true)) > 0)
                                                         <strong><u>{{ translate('messages.variation') }} : </u></strong>
@@ -614,7 +616,8 @@
                                     $del_c = 0;
                                 }
 
-                                $free_delivery_over = \App\Models\BusinessSetting::where('key', 'free_delivery_over')->first()->value;
+                                $free_delivery_over = optional(\App\Models\BusinessSetting::where('key', 'free_delivery_over')->first())->value;
+
                                 if (isset($free_delivery_over)) {
                                     if ($free_delivery_over <= $product_price + $total_addon_price - $coupon_discount_amount - $store_discount_amount) {
                                         $del_c = 0;
@@ -660,6 +663,9 @@
                                             + {{ \App\CentralLogics\Helpers::format_currency($total_tax_amount) }}</dd>
                                         <dt class="col-sm-6">{{ translate('messages.delivery') }}
                                             {{ translate('messages.fee') }}:</dt>
+
+                                        @php($del_c = $del_c ?? $order->delivery_charge ?? 0)
+
                                         <dd class="col-sm-6">
                                             + {{ \App\CentralLogics\Helpers::format_currency($del_c) }}
                                             <hr>
@@ -716,7 +722,10 @@
 
                                         <img class="avatar-img" style="width: 75px"
                                             onerror="this.src='{{ asset('assets/admin/img/160x160/img1.jpg') }}'"
-                                            src="{{ asset('storage/delivery-man/' . $order->delivery_man->image) }}"
+                                            src="{{ $order->delivery_man && $order->delivery_man->image
+                                                ? asset('storage/delivery-man/' . $order->delivery_man->image)
+                                                : asset('assets/admin/img/160x160/img1.jpg') }}"
+
                                             alt="Image Description">
                                     </div>
                                     <div class="media-body">
@@ -796,7 +805,10 @@
 
                                     <img class="avatar-img" style="width: 75px"
                                         onerror="this.src='{{ asset('assets/admin/img/160x160/img1.jpg') }}'"
-                                        src="{{ asset('storage/profile/' . $order->customer->image) }}"
+                                        src="{{ $order->customer && $order->customer->image
+                                            ? asset('storage/profile/' . $order->customer->image)
+                                            : asset('assets/admin/img/160x160/img1.jpg') }}"
+
                                         alt="Image Description">
 
                                 </div>
