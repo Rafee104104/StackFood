@@ -1541,9 +1541,12 @@
 
     </script>
 
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&v=3.45.8">
-    </script>
+    @php($mapKey = optional(\App\Models\BusinessSetting::where('key', 'map_api_key')->first())->value)
+
+    @if($mapKey)
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ $mapKey }}&v=3.45.8"></script>
+    @endif
+
     <script>
         function addDeliveryMan(id) {
             $.ajax({
@@ -1633,7 +1636,7 @@
                 google.maps.event.addListener(Restaurantmarker, 'click', (function(Restaurantmarker) {
                     return function() {
                         @if ($parcel_order)
-                            infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/profile/' . $order->customer->image) }}'></div><div style='float:right; padding: 10px;'><b>{{ $order->customer->f_name }}{{ $order->customer->l_name }}</b><br />{{ $address['address'] }}</div>");
+                            infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ $order->customer && $order->customer->image ? asset('storage/profile/' . $order->customer->image) : asset('assets/admin/img/160x160/img1.jpg') }}'></div><div style='float:right; padding: 10px;'><b>{{ $order->customer->f_name }}{{ $order->customer->l_name }}</b><br />{{ $address['address'] }}</div>");
                         @else
                             infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/restaurant/' . $order->store->logo) }}'></div><div class='text-break' style='float:right; padding: 10px;'><b>{{ Str::limit($order->store->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>");
                         @endif
@@ -1702,7 +1705,7 @@
 
                     google.maps.event.addListener(marker, 'click', (function(marker) {
                     return function() {
-                        infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/profile/' . $order->customer->image) }}'></div><div style='float:right; padding: 10px;'><b>{{ $order->customer->f_name }} {{ $order->customer->l_name }}</b><br />{{ $address['address'] }}</div>");
+                        infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ $order->customer && $order->customer->image ? asset('storage/profile/' . $order->customer->image) : asset('assets/admin/img/160x160/img1.jpg') }}'></div><div style='float:right; padding: 10px;'><b>{{ $order->customer->f_name }} {{ $order->customer->l_name }}</b><br />{{ $address['address'] }}</div>");
                         infowindow.open(map, marker);
                     }
                     })(marker));
