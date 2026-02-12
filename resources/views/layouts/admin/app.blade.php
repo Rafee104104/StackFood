@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="{{asset('assets/admin/css/custom.css')}}">
     <!-- CSS Front Template -->
     <link rel="stylesheet" href="{{asset('assets/admin/css/theme.minc619.css')}}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     @stack('css_or_js')
     <style>
         :root {
@@ -534,6 +536,14 @@
             s.src = "{{ asset('assets/admin/vendor/babel-polyfill/polyfill.min.js') }}";
             document.head.appendChild(s);
         }
+    </script>
+
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
     </script>
 
 </body>

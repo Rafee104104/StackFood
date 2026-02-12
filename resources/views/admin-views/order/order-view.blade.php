@@ -1161,7 +1161,7 @@
                     <div class="row">
                         <div class="col-md-5 my-2">
                             <ul class="list-group overflow-auto" style="max-height:400px;">
-                                @foreach ($deliveryMen as $dm)
+                                @foreach ($deliveryMen ?? [] as $dm)
                                     <li class="list-group-item">
                                         <span class="dm_list" role='button' data-id="{{ $dm['id'] }}">
                                             <img class="avatar avatar-sm avatar-circle mr-1"
@@ -1223,18 +1223,24 @@
 @endsection
 
 @push('script_2')
+<form id="update-order-form"
+      action="{{ route('admin.order.update', $order->id) }}"
+      method="POST"
+      style="display: none;">
+    @csrf
+</form>
 
     <script>
         $('#search-form').on('submit', function(e) {
             e.preventDefault();
             var keyword = $('#datatableSearch').val();
-            var nurl = new URL('{!! url()->full() !!}');
+            var nurl = new URL("{{ url()->full() }}");
             nurl.searchParams.set('keyword', keyword);
             location.href = nurl;
         });
 
         function set_category_filter(id) {
-            var nurl = new URL('{!! url()->full() !!}');
+            var nurl = new URL("{{ url()->full() }}");
             nurl.searchParams.set('category_id', id);
             location.href = nurl;
         }
@@ -1443,7 +1449,7 @@
             Swal.fire({
                 title: "{{ translate('messages.are_you_sure') }}",
                 text: "{{ translate('messages.you_want_to_remove_this_order_item') }}",
-                type: 'warning',
+                icon: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
@@ -1451,7 +1457,7 @@
                 confirmButtonText: "{{ translate('messages.yes') }}",
                 reverseButtons: true
             }).then((result) => {
-                if (result.value) {
+                if (result.isConfirmed) {
                     $.post("{{ route('admin.order.remove-from-cart') }}", {
                         _token: '{{ csrf_token() }}',
                         key: key,
@@ -1482,7 +1488,7 @@
             Swal.fire({
                 title: "{{ translate('messages.are_you_sure') }}",
                 text: "{{ translate('messages.you_want_to_edit_this_order') }}",
-                type: 'warning',
+                icon: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
@@ -1490,17 +1496,17 @@
                 confirmButtonText: "{{ translate('messages.yes') }}",
                 reverseButtons: true
             }).then((result) => {
-                if (result.value) {
+                if (result.isConfirmed) {
                     location.href = "{{ route('admin.order.edit', $order->id) }}";
                 }
             })
         }
 
-        function cancle_editing_order() {
+        function cancel_editing_order() {
             Swal.fire({
                 title: "{{ translate('messages.are_you_sure') }}",
                 text: "{{ translate('messages.you_want_to_cancel_editing') }}",
-                type: 'warning',
+                icon: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
@@ -1508,29 +1514,31 @@
                 confirmButtonText: "{{ translate('messages.yes') }}",
                 reverseButtons: true
             }).then((result) => {
-                if (result.value) {
+                if (result.isConfirmed) {
                     location.href = "{{ route('admin.order.edit', $order->id) }}?cancle=true";
                 }
             })
         }
 
         function update_order() {
-            Swal.fire({
-                title: "{{ translate('messages.are_you_sure') }}",
-                text: "{{ translate('messages.you_want_to_submit_all_changes_for_this_order') }}",
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#FC6A57',
-                cancelButtonText: "{{ translate('messages.no') }}",
-                confirmButtonText: "{{ translate('messages.yes') }}",
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    location.href = "{{ route('admin.order.update', $order->id) }}";
-                }
-            })
+    Swal.fire({
+        title: "{{ translate('messages.are_you_sure') }}",
+        text: "{{ translate('messages.you_want_to_submit_all_changes_for_this_order') }}",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#FC6A57',
+        cancelButtonColor: '#6c757d',
+        cancelButtonText: "{{ translate('messages.no') }}",
+        confirmButtonText: "{{ translate('messages.yes') }}",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            //location.href = "{{ route('admin.order.update', $order->id) }}";
+            document.getElementById('update-order-form').submit();
         }
+    });
+}
+
     </script>
 
     <script

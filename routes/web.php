@@ -80,8 +80,12 @@ Route::get('authentication-failed', function () {
 
 // ================= Admin Dashboard file Vendor-view POS order =================
 use App\Http\Controllers\Vendor\OrderController;
+Route::post('admin/order/update/{order}',
+    [OrderController::class, 'update']
+)->name('admin.order.update');
 
-Route::post('/vendor/orders/add-delivery-man',
+Route::post(
+    '/vendor/orders/add-delivery-man',
     [OrderController::class, 'addDeliveryMan']
 )->name('vendor.orders.add-delivery-man');
 

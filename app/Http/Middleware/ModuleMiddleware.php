@@ -142,7 +142,6 @@ class ModuleMiddleware
                 ],
             ];
 
-
             foreach ($adminAllowedModules as $moduleKey => $routes) {
 
                 foreach ($routes as $route) {
