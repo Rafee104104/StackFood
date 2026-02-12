@@ -1223,7 +1223,7 @@
 
         function quick_view_cart_item(key) {
             $.get({
-                url: '{{ route('admin.order.quick-view-cart-item') }}',
+                url: "{{ route('admin.order.quick-view-cart-item') }}",
                 dataType: 'json',
                 data: {
                     key: key,
@@ -1244,7 +1244,7 @@
 
         function quickView(product_id) {
             $.get({
-                url: '{{ route('admin.order.quick-view') }}',
+                url: "{{ route('admin.order.quick-view') }}",
                 dataType: 'json',
                 data: {
                     product_id: product_id,
@@ -1356,7 +1356,7 @@
                 });
                 $.ajax({
                     type: "POST",
-                    url: '{{ route('admin.item.variant-price') }}',
+                    url: "{{ route('admin.item.variant-price') }}",
                     data: $('#add-to-cart-form').serializeArray(),
                     success: function(data) {
                         $('#add-to-cart-form #chosen_price_div').removeClass('d-none');
@@ -1373,7 +1373,7 @@
                 }
             });
             $.post({
-                url: '{{ route('admin.order.add-to-cart') }}',
+                url: "{{ route('admin.order.add-to-cart') }}",
                 data: $('#' + form_id).serializeArray(),
                 beforeSend: function() {
                     $('#loading').show();
@@ -1387,7 +1387,7 @@
                         });
                         return false;
                     } else if (data.data == 0) {
-                        toastr.success('{{ translate('messages.product_has_been_added_in_cart') }}', {
+                        toastr.success("{{ translate('messages.product_has_been_added_in_cart') }}", {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -1396,7 +1396,7 @@
                     }
                     $('.call-when-done').click();
 
-                    toastr.success('{{ translate('messages.order_updated_successfully') }}', {
+                    toastr.success("{{ translate('messages.order_updated_successfully') }}", {
                         CloseButton: true,
                         ProgressBar: true
                     });
@@ -1410,18 +1410,18 @@
 
         function removeFromCart(key) {
             Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: '{{ translate('messages.you_want_to_remove_this_order_item') }}',
+                title: "{{ translate('messages.are_you_sure') }}",
+                text: "{{ translate('messages.you_want_to_remove_this_order_item') }}",
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.yes') }}',
+                cancelButtonText: "{{ translate('messages.no') }}",
+                confirmButtonText: "{{ translate('messages.yes') }}",
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    $.post('{{ route('admin.order.remove-from-cart') }}', {
+                    $.post("{{ route('admin.order.remove-from-cart') }}", {
                         _token: '{{ csrf_token() }}',
                         key: key,
                         order_id: '{{ $order->id }}'
@@ -1434,7 +1434,7 @@
                                 });
                             }
                         } else {
-                            toastr.success('{{ translate('messages.item_has_been_removed_from_cart') }}', {
+                            toastr.success("{{ translate('messages.item_has_been_removed_from_cart') }}", {
                                 CloseButton: true,
                                 ProgressBar: true
                             });
@@ -1449,54 +1449,54 @@
 
         function edit_order() {
             Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: '{{ translate('messages.you_want_to_edit_this_order') }}',
+                title: "{{ translate('messages.are_you_sure') }}",
+                text: "{{ translate('messages.you_want_to_edit_this_order') }}",
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.yes') }}',
+                cancelButtonText: "{{ translate('messages.no') }}",
+                confirmButtonText: "{{ translate('messages.yes') }}",
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    location.href = '{{ route('admin.order.edit', $order->id) }}';
+                    location.href = "{{ route('admin.order.edit', $order->id) }}";
                 }
             })
         }
 
         function cancle_editing_order() {
             Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: '{{ translate('messages.you_want_to_cancel_editing') }}',
+                title: "{{ translate('messages.are_you_sure') }}",
+                text: "{{ translate('messages.you_want_to_cancel_editing') }}",
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.yes') }}',
+                cancelButtonText: "{{ translate('messages.no') }}",
+                confirmButtonText: "{{ translate('messages.yes') }}",
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    location.href = '{{ route('admin.order.edit', $order->id) }}?cancle=true';
+                    location.href = "{{ route('admin.order.edit', $order->id) }}?cancle=true";
                 }
             })
         }
 
         function update_order() {
             Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: '{{ translate('messages.you_want_to_submit_all_changes_for_this_order') }}',
+                title: "{{ translate('messages.are_you_sure') }}",
+                text: "{{ translate('messages.you_want_to_submit_all_changes_for_this_order') }}",
                 type: 'warning',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.yes') }}',
+                cancelButtonText: "{{ translate('messages.no') }}",
+                confirmButtonText: "{{ translate('messages.yes') }}",
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    location.href = '{{ route('admin.order.update', $order->id) }}';
+                    location.href = "{{ route('admin.order.update', $order->id) }}";
                 }
             })
         }
@@ -1600,7 +1600,7 @@
                         @endif
                         infowindow.open(map, Restaurantmarker);
                     }
-                })(Restaurantmarker));                
+                })(Restaurantmarker));
             @endif
 
             map.fitBounds(dmbounds);

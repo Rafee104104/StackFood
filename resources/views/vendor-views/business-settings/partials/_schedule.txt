@@ -1,0 +1,84 @@
+_schedule.blade
+
+@php($data=[])
+<?php
+foreach ($store->schedules as $schedule)
+{
+    $data[$schedule->day][]=['id'=>$schedule->id,'start_time'=>$schedule->opening_time, 'end_time'=>$schedule->closing_time];
+}
+   $urlRoute = route('vendor.business-settings.remove-schedule',['store_schedule'=>$day['id']]);
+?>
+
+
+replaced with
+
+@php
+$data = [];
+
+if(isset($store) && $store->schedules){
+    foreach ($store->schedules as $schedule){
+        $data[$schedule->day][] = [
+            'id' => $schedule->id,
+            'start_time' => $schedule->opening_time,
+            'end_time' => $schedule->closing_time
+        ];
+    }
+}
+
+$days = [
+    1 => translate('messages.monday'),
+    2 => translate('messages.tuesday'),
+    3 => translate('messages.wednesday'),
+    4 => translate('messages.thursday'),
+    5 => translate('messages.friday'),
+    6 => translate('messages.saturday'),
+    0 => translate('messages.sunday'),
+];
+@endphp
+
+
+@foreach($days as $dayKey => $dayName)
+
+<div class="my-2 p-1 border rounded">
+    <span class="btn btn-dark">{{ $dayName }} :</span>
+
+    @if(isset($data[$dayKey]) && count($data[$dayKey]))
+
+        @foreach ($data[$dayKey] as $day)
+
+            @php
+                $urlRoute = route(
+                    'vendor.business-settings.remove-schedule',
+                    ['store_schedule' => $day['id']]
+                );
+            @endphp
+
+            <span class="btn btn-sm btn-outline-dark m-1 disabled">
+                {{ date(config('timeformat'), strtotime($day['start_time'])) }}
+                -
+                {{ date(config('timeformat'), strtotime($day['end_time'])) }}
+
+                <span class="badge badge-danger rounded-circle cursor-pointer"
+                      onclick="delete_schedule('{{ $urlRoute }}')">
+                    X
+                </span>
+            </span>
+
+        @endforeach
+
+    @else
+        <span class="btn btn-sm btn-outline-danger m-1 disabled">
+            {{ translate('messages.Offday') }}
+        </span>
+    @endif
+
+    <span class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#exampleModal"
+          data-dayid="{{ $dayKey }}"
+          data-day="{{ $dayName }}">
+        <i class="tio-add"></i>
+    </span>
+</div>
+
+@endforeach

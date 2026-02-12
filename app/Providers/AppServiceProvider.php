@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use App\CentralLogics\Helpers;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,21 +24,40 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    // public function boot()
+    // {
+
+    //     try
+    //     {
+    //
+
+    //         Paginator::useBootstrap();
+    //         foreach(Helpers::get_view_keys() as $key=>$value)
+    //         {
+    //             view()->share($key, $value);
+    //         }
+    //     }
+    //     catch(\Exception $e)
+    //     {
+
+    //     }
+
+    // }
     public function boot()
     {
-        
-        try
-        {
+        try {
+            $lang = session()->get('language') ?? 'en';
+
+            // ✅ THIS LINE WAS MISSING
+            View::share('lang', $lang);
+
             Paginator::useBootstrap();
-            foreach(Helpers::get_view_keys() as $key=>$value)
-            {
+
+            foreach (Helpers::get_view_keys() as $key => $value) {
                 view()->share($key, $value);
             }
+        } catch (\Exception $e) {
+            // silently fail
         }
-        catch(\Exception $e)
-        {
-
-        }
-        
     }
 }

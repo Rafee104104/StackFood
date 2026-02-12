@@ -227,11 +227,10 @@
                                     confirmButtonText: `Yes`,
                                     denyButtonText: `Don't Logout`,
                                     }).then((result) => {
-                                    if (result.value) {
+                                    if (result.value) =
                                     location.href="{{route('vendor.auth.logout')}}";
-                                    } else{
+                                     else
                                     Swal.fire('Canceled', '' , 'info' )
-                                    }
                                     })">
                                     <span class="text-truncate pr-2" title="Sign out">{{translate('messages.sign_out')}}</span>
                                 </a>

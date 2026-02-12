@@ -7,6 +7,9 @@
 @endpush
 
 @section('content')
+    @php
+        $var = 'addon-{{$addon['id']}}';
+    @endphp
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
@@ -107,7 +110,7 @@
                                         <a class="btn btn-sm btn-white"
                                                 href="{{route('vendor.addon.edit',[$addon['id']])}}" title="{{translate('messages.edit')}} {{translate('messages.addon')}}"><i class="tio-edit"></i></a>
                                         <a class="btn btn-sm btn-white"     href="javascript:"
-                                            onclick="form_alert('addon-{{$addon['id']}}','Want to delete this addon ?')" title="{{translate('messages.delete')}} {{translate('messages.addon')}}"><i class="tio-delete-outlined"></i></a>
+                                            onclick="form_alert($var,'Want to delete this addon ?')" title="{{translate('messages.delete')}} {{translate('messages.addon')}}"><i class="tio-delete-outlined"></i></a>
                                         <form action="{{route('vendor.addon.delete',[$addon['id']])}}"
                                                     method="post" id="addon-{{$addon['id']}}">
                                             @csrf @method('delete')

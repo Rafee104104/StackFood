@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 use App\Scopes\ZoneScope;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Zone extends Model
 {
     use HasFactory;
@@ -47,5 +47,5 @@ class Zone extends Model
         static::addGlobalScope(new ZoneScope);
     }
 
-    
+
 }

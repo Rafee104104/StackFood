@@ -11,7 +11,13 @@ class Actch
     {
 
         // captcha logic (or just allow)
-        return $next($request);
+        //return $next($request);
+        $response = $next($request);
+
+        if ($response && method_exists($response, 'headers')) {
+            $response->headers->set('Cache-Control', 'no-cache');
+        }
+
+        return $response;
     }
-    
 }

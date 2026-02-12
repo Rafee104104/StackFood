@@ -1316,4 +1316,9 @@
   'store_logo' => 'Store logo',
   'Export Restaurants' => 'Export Restaurants',
   'Permission denied! please contact to admin' => 'Permission denied! please contact to admin',
+  'link' => 'Link',
+  'mail_config' => 'Mail config',
+  'all_zones' => 'All zones',
+  'thursday' => 'Thursday',
+  'store settings updated!' => 'Store settings updated!',
 );

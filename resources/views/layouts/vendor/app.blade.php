@@ -172,12 +172,14 @@
 {!! Toastr::message() !!}
 
 @if ($errors->any())
+    @foreach($errors->all() as $error)
     <script>
         toastr.error('{{$error}}', 'Error', {
             CloseButton: true,
             ProgressBar: true
         });
     </script>
+    @endforeach
 @endif
 <!-- JS Plugins Init. -->
 <script>

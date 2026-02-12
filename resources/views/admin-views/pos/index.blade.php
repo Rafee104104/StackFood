@@ -935,25 +935,25 @@
     </script>
     @php(session(['last_order' => false]))
     @endif
-    <script>
+    <!-- <script>
         window.APP_STATE = <?php echo json_encode([
                                 'hasStore' => (bool) $store,
                                 'zoneId'   => $store ? $store->zone_id : null,
                                 'lat'      => $store->latitude ?? 23.757989,
                                 'lng'      => $store->longitude ?? 90.360587,
                             ]); ?>;
-    </script>
+    </script> -->
 
 
 
     <!-- Google Map -->
-    <script
+    <!-- <script
         src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap"
         async
         defer>
-    </script>
+    </script> -->
 
-    <script>
+    <!-- <script>
         const HAS_STORE = window.APP_STATE.hasStore;
         const STORE_ZONE_ID = window.APP_STATE.zoneId;
 
@@ -1068,44 +1068,16 @@
                 e.preventDefault();
             }
         })
-    </script>
-
-    <script>
-        (function(g) {
-            var h, a, k, p = "The Google Maps JavaScript API",
-                c = "google",
-                l = "importLibrary",
-                q = "__ib__",
-                m = document,
-                b = window;
-            b = b[c] || (b[c] = {});
-            var d = b.maps || (b.maps = {}),
-                r = new Set,
-                e = new URLSearchParams,
-                u = () => h || (h = new Promise(async (f, n) => {
-                    await (a = m.createElement("script"));
-                    e.set("libraries", [...r] + "");
-                    for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
-                    e.set("callback", c + ".maps." + q);
-                    a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
-                    d[q] = f;
-                    a.onerror = () => h = n(Error(p + " could not load."));
-                    a.async = true;
-                    m.head.append(a);
-                }));
-            d[l] ? console.warn(p + " only loads once.") : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n));
-        })({
-            key: "{{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}",
-        });
-    </script>
+    </script> -->
 
 
-    <script>
+
+    <!-- <script>
         console.log('Google Maps loaded:', typeof google !== 'undefined');
     </script>
     @if(config('services.recaptcha.site_key'))
     <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
-    @endif
+    @endif -->
 
     <!-- IE Support -->
     <div id="ie-polyfill"

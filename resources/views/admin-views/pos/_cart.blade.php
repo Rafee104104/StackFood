@@ -1,6 +1,11 @@
+@php
+    $cartImage = $cartItem['image'] ?? null;
+    $cartName  = $cartItem['name'] ?? 'Product';
+@endphp
+
 <script>
     window.CART_FALLBACK_IMG = "{{ asset('assets/admin/img/160x160/img2.jpg') }}";
-</script>|
+</script>
 <div class="d-flex flex-row" style="max-height: 300px; overflow-y: scroll;">
     <table class="table table-bordered">
         <thead class="text-muted">
@@ -46,9 +51,9 @@
     data-key="{{ $key }}">
 
     <img class="avatar avatar-sm mr-1"
-         src="{{ asset('storage/product/'.$cartItem['image']) }}"
-         onerror="this.src=window.CART_FALLBACK_IMG"
-         alt="{{ e($cartItem['name']) }} image">
+     src="{{ $cartImage ? asset('storage/product/'.$cartImage) : asset('assets/admin/img/160x160/img2.jpg') }}"
+     onerror="this.src=window.CART_FALLBACK_IMG"
+     alt="{{ e($cartName) }} image">
 
     <div class="media-body">
         <h5 class="text-hover-primary mb-0">

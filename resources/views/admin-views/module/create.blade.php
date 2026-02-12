@@ -1,4 +1,5 @@
 @extends('layouts.admin.app')
+@php($lang = $lang ?? app()->getLocale())
 
 @section('title',translate('messages.modules'))
 
@@ -49,7 +50,7 @@
                     <div class="form-group">
                         <label class="input-label" for="module_type">{{translate('messages.description')}} ({{strtoupper($lang)}})</label>
                         <textarea class="ckeditor form-control" name="description[]"></textarea>
-                    </div>                
+                    </div>
                 </div>
 
                 <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -83,7 +84,7 @@
                             <div class="card mt-1" id="module_des_card" style="display: none;">
                                 <div class="card-body" id="module_description"></div>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -91,13 +92,13 @@
                                         title="{{ translate('messages.module_all_zone_hint') }}">
                                         <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                             alt="{{ translate('messages.module_all_zone_hint') }}" style="height: 10px; width: 10px;">
-                                </span> *</small></label>
+                                    </span> *</small></label>
                             <div class="input-group input-group-md-down-break">
                                 <!-- Custom Radio -->
                                 <div class="form-control">
                                     <div class="custom-control custom-radio">
                                         <input type="radio" class="custom-control-input" value="1"
-                                            name="customer_verification" id="all_zone_service1">
+                                            name="all_zone_service" id="all_zone_service1">
                                         <label class="custom-control-label" for="all_zone_service1">{{ translate('messages.All Zones') }}</label>
                                     </div>
                                 </div>
@@ -107,7 +108,7 @@
                                 <div class="form-control">
                                     <div class="custom-control custom-radio">
                                         <input type="radio" class="custom-control-input" value="0"
-                                            name="customer_verification" id="all_zone_service2" >
+                                            name="all_zone_service" id="all_zone_service2">
                                         <label class="custom-control-label"
                                             for="all_zone_service2">{{ translate('One Zone') }}</label>
                                     </div>
@@ -185,17 +186,13 @@
             url: "{{url('/')}}/admin/module/type/?module_type=" + id,
             dataType: 'json',
             success: function(data) {
-                if(data.data.description.length)
-                {
+                if (data.data.description.length) {
                     $('#module_des_card').show();
-                    $('#module_description').html(data.data.description);                    
-                }
-                else
-                {
+                    $('#module_description').html(data.data.description);
+                } else {
                     $('#module_des_card').hide();
                 }
-                if(id=='parcel')
-                {
+                if (id == 'parcel') {
                     $('#module_theme').hide();
                 }
             },
@@ -217,7 +214,7 @@
     $("#customFileEg1").change(function() {
         readURL(this, 'viewer');
     });
-    
+
     $("#customFileEg2").change(function() {
         readURL(this, 'viewer2');
     });
@@ -242,7 +239,7 @@
 </script>
 <script src="//cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('.ckeditor').ckeditor();
     });
 </script>

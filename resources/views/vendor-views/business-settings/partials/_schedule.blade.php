@@ -1,15 +1,79 @@
-@php($data=[])
-<?php
-foreach ($store->schedules as $schedule)
-{
-    $data[$schedule->day][]=['id'=>$schedule->id,'start_time'=>$schedule->opening_time, 'end_time'=>$schedule->closing_time];
+@php
+$data = [];
+
+if(isset($store) && $store->schedules){
+    foreach ($store->schedules as $schedule){
+        $data[$schedule->day][] = [
+            'id' => $schedule->id,
+            'start_time' => $schedule->opening_time,
+            'end_time' => $schedule->closing_time
+        ];
+    }
 }
-?>
+
+$days = [
+    1 => translate('messages.monday'),
+    2 => translate('messages.tuesday'),
+    3 => translate('messages.wednesday'),
+    4 => translate('messages.thursday'),
+    5 => translate('messages.friday'),
+    6 => translate('messages.saturday'),
+    0 => translate('messages.sunday'),
+];
+@endphp
+
+
+@foreach($days as $dayKey => $dayName)
+
+<div class="my-2 p-1 border rounded">
+    <span class="btn btn-dark">{{ $dayName }} :</span>
+
+    @if(isset($data[$dayKey]) && count($data[$dayKey]))
+
+        @foreach ($data[$dayKey] as $day)
+
+            @php
+                $urlRoute = route(
+                    'vendor.business-settings.remove-schedule',
+                    ['store_schedule' => $day['id']]
+                );
+            @endphp
+
+            <span class="btn btn-sm btn-outline-dark m-1 disabled">
+                {{ date(config('timeformat'), strtotime($day['start_time'])) }}
+                -
+                {{ date(config('timeformat'), strtotime($day['end_time'])) }}
+
+                <span class="badge badge-danger rounded-circle cursor-pointer"
+                      onclick="delete_schedule('{{ $urlRoute }}')">
+                    X
+                </span>
+            </span>
+
+        @endforeach
+
+    @else
+        <span class="btn btn-sm btn-outline-danger m-1 disabled">
+            {{ translate('messages.Offday') }}
+        </span>
+    @endif
+
+    <span class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#exampleModal"
+          data-dayid="{{ $dayKey }}"
+          data-day="{{ $dayName }}">
+        <i class="tio-add"></i>
+    </span>
+</div>
+
+@endforeach
+
 <div class="my-2 p-1 border rounded">
     <span class="btn btn-dark">{{translate('messages.monday')}} :</span>
     @if(isset($data['1']) && count($data['1']))
         @foreach ($data['1'] as $day)
-            <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{route('vendor.business-settings.remove-schedule',['store_schedule'=>$day['id']])}}')">X</span></span>
+            <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{$urlRoute}}')">X</span></span>
         @endforeach
     @else
         <span class="btn btn-sm btn-outline-danger m-1 disabled">{{translate('messages.Offday')}}</span>
@@ -21,7 +85,7 @@ foreach ($store->schedules as $schedule)
     <span class="btn btn-dark">{{translate('messages.tuesday')}} :</span>
     @if(isset($data['2']) && count($data['2']))
         @foreach ($data['2'] as $day)
-            <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{route('vendor.business-settings.remove-schedule',['store_schedule'=>$day['id']])}}')">X</span></span>
+            <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{$urlRoute}}')">X</span></span>
         @endforeach
     @else
         <span class="btn btn-sm btn-outline-danger m-1 disabled">{{translate('messages.Offday')}}</span>
@@ -33,7 +97,7 @@ foreach ($store->schedules as $schedule)
         <span class="btn btn-dark">{{translate('messages.wednesday')}} :</span>
         @if(isset($data['3']) && count($data['3']))
             @foreach ($data['3'] as $day)
-                <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{route('vendor.business-settings.remove-schedule',['store_schedule'=>$day['id']])}}')">X</span></span>
+                <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{$urlRoute}}')">X</span></span>
             @endforeach
         @else
             <span class="btn btn-sm btn-outline-danger m-1 disabled">{{translate('messages.Offday')}}</span>
@@ -45,7 +109,7 @@ foreach ($store->schedules as $schedule)
         <span class="btn btn-dark">{{translate('messages.thirsday')}} :</span>
         @if(isset($data['4']) && count($data['4']))
             @foreach ($data['4'] as $day)
-                <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{route('vendor.business-settings.remove-schedule',['store_schedule'=>$day['id']])}}')">X</span></span>
+                <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{$urlRoute}}')">X</span></span>
             @endforeach
         @else
             <span class="btn btn-sm btn-outline-danger m-1 disabled">{{translate('messages.Offday')}}</span>
@@ -57,7 +121,7 @@ foreach ($store->schedules as $schedule)
         <span class="btn btn-dark">{{translate('messages.friday')}} :</span>
         @if(isset($data['5']) && count($data['5']))
             @foreach ($data['5'] as $day)
-                <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{route('vendor.business-settings.remove-schedule',['store_schedule'=>$day['id']])}}')">X</span></span>
+                <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{$urlRoute}}')">X</span></span>
             @endforeach
         @else
             <span class="btn btn-sm btn-outline-danger m-1 disabled">{{translate('messages.Offday')}}</span>
@@ -69,7 +133,7 @@ foreach ($store->schedules as $schedule)
         <span class="btn btn-dark">{{translate('messages.saturday')}} :</span>
         @if(isset($data['6']) && count($data['6']))
             @foreach ($data['6'] as $day)
-                <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{route('vendor.business-settings.remove-schedule',['store_schedule'=>$day['id']])}}')">X</span></span>
+                <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{$urlRoute}}')">X</span></span>
             @endforeach
         @else
             <span class="btn btn-sm btn-outline-danger m-1 disabled">{{translate('messages.Offday')}}</span>
@@ -81,7 +145,7 @@ foreach ($store->schedules as $schedule)
         <span class="btn btn-dark">{{translate('messages.sunday')}} :</span>
         @if(isset($data['0']) && count($data['0']))
             @foreach ($data['0'] as $day)
-                <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{route('vendor.business-settings.remove-schedule',['store_schedule'=>$day['id']])}}')">X</span></span>
+                <span class="btn btn-sm btn-outline-dark m-1 disabled">{{date(config('timeformat'), strtotime($day['start_time']))}} - {{date(config('timeformat'), strtotime($day['end_time']))}} <span class="badge badge-danger rounded-circle cursor-pointer" onclick="delete_schedule('{{$urlRoute}}')">X</span></span>
             @endforeach
         @else
             <span class="btn btn-sm btn-outline-danger m-1 disabled">{{translate('messages.Offday')}}</span>

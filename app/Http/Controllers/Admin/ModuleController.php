@@ -9,6 +9,7 @@ use App\Models\Module;
 use App\Models\Translation;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ModuleController extends Controller
 {
@@ -20,8 +21,8 @@ class ModuleController extends Controller
     public function index()
     {
         $modules = Module::withCount('stores')->latest()->paginate(config('default_pagination'));
-        
-        return view('admin-views.module.index',compact('modules'));
+
+        return view('admin-views.module.index', compact('modules'));
     }
 
     /**
@@ -29,9 +30,15 @@ class ModuleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    // public function create(Request $request)
+    // {
+    //     return view('admin-views.module.create');
+    // }
+    public function create()
     {
-        return view('admin-views.module.create');
+        $lang = app()->getLocale(); // 👈 ADD THIS
+
+        return view('admin-views.module.create', compact('lang'));
     }
 
     /**
@@ -42,30 +49,35 @@ class ModuleController extends Controller
      */
     public function store(Request $request)
     {
+        $enIndex = array_search('en', $request->lang);
+        $enIndex = $enIndex === false ? 0 : $enIndex;
+
         $request->validate([
-            'module_name' => 'required|unique:modules|max:100',
-            'module_type'=>'required',
-            'theme'=>'required_unless:module_type,parcel',
+            'module_name.' . $enIndex => [
+                'required',
+                'max:100',
+                Rule::unique('modules', 'module_name'),
+            ],
+            'module_type' => 'required',
+            'theme' => 'required_unless:module_type,parcel',
         ], [
-            'module_name.required' => translate('messages.Name is required!'),
+            'module_name.' . $enIndex . '.required' => translate('messages.Name is required!'),
         ]);
 
         $module = new Module();
-        $module->module_name = $request->module_name[array_search('en', $request->lang)];
+        $module->module_name = $request->module_name[$enIndex];
         $module->icon = Helpers::upload('module/', 'png', $request->file('icon'));
         $module->thumbnail = Helpers::upload('module/', 'png', $request->file('thumbnail'));
-        $module->module_type= $request->module_type;
-        $module->theme_id= $request->theme??1;
-        $module->description= $request->description[array_search('en', $request->lang)];
-        $module->all_zone_service = $request->all_zone_service??false;
+        $module->module_type = $request->module_type;
+        $module->theme_id = $request->theme ?? 1;
+        $module->description = $request->description[$enIndex];
+        $module->all_zone_service = $request->all_zone_service ?? false;
         $module->save();
 
         $data = [];
-        foreach($request->lang as $index=>$key)
-        {
-            if($request->module_name[$index] && $key != 'en')
-            {
-                array_push($data, Array(
+        foreach ($request->lang as $index => $key) {
+            if ($request->module_name[$index] && $key != 'en') {
+                array_push($data, array(
                     'translationable_type'  => 'App\Models\Module',
                     'translationable_id'    => $module->id,
                     'locale'                => $key,
@@ -83,8 +95,7 @@ class ModuleController extends Controller
                 ));
             }
         }
-        if(count($data))
-        {
+        if (count($data)) {
             Translation::insert($data);
         }
 
@@ -101,7 +112,7 @@ class ModuleController extends Controller
     public function show($id)
     {
         $module = Module::findOrFail($id);
-        return response()->json(['data'=>config('module.'.$module->module_type)]);
+        return response()->json(['data' => config('module.' . $module->module_type)]);
     }
 
     /**
@@ -112,8 +123,7 @@ class ModuleController extends Controller
      */
     public function edit($id)
     {
-        if(env('APP_MODE')=='demo' && in_array($id, [1,2,3,4,5]))
-        {
+        if (env('APP_MODE') == 'demo' && in_array($id, [1, 2, 3, 4, 5])) {
             Toastr::warning(translate('messages.you_can_not_edit_this_module_please_add_a_new_module_to_edit'));
             return back();
         }
@@ -131,45 +141,53 @@ class ModuleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(env('APP_MODE')=='demo' && in_array($id, [1,2,3,4,5]))
-        {
+        if (env('APP_MODE') == 'demo' && in_array($id, [1, 2, 3, 4, 5])) {
             Toastr::warning(translate('messages.you_can_not_edit_this_module_please_add_a_new_module_to_edit'));
             return back();
         }
 
+        $enIndex = array_search('en', $request->lang);
+        $enIndex = $enIndex === false ? 0 : $enIndex;
+
         $request->validate([
-            'module_name' => 'required|max:100|unique:modules,module_name,'.$id,
-            'theme'=>'required_unless:module_type,parcel',
+            'module_name.' . $enIndex => [
+                'required',
+                'max:100',
+                Rule::unique('modules', 'module_name')->ignore($id),
+            ],
+            'theme' => 'required_unless:module_type,parcel',
         ], [
-            'module_name.required' => translate('messages.Name is required!'),
+            'module_name.' . $enIndex . '.required' => translate('messages.Name is required!'),
         ]);
         $module = Module::withoutGlobalScope('translate')->findOrFail($id);
 
-        $module->module_name = $request->module_name[array_search('en', $request->lang)];
+        $module->module_name = $request->module_name[$enIndex];
         $module->icon = $request->has('icon') ? Helpers::update('module/', $module->icon, 'png', $request->file('icon')) : $module->icon;
         $module->thumbnail = $request->has('thumbnail') ? Helpers::update('module/', $module->thumbnail, 'png', $request->file('thumbnail')) : $module->thumbnail;
-        $module->theme_id= $request->theme??1;
-        $module->description =  $request->description[array_search('en', $request->lang)];
+        $module->theme_id = $request->theme ?? 1;
+        $module->description =  $request->description[$enIndex];
         $module->all_zone_service = $request->all_zone_service ?? false;
         $module->save();
-        foreach($request->lang as $index=>$key)
-        {
-            if($request->module_name[$index] && $key != 'en')
-            {
+        foreach ($request->lang as $index => $key) {
+            if ($request->module_name[$index] && $key != 'en') {
                 Translation::updateOrInsert(
-                    ['translationable_type'  => 'App\Models\Module',
+                    [
+                        'translationable_type'  => 'App\Models\Module',
                         'translationable_id'    => $module->id,
                         'locale'                => $key,
-                        'key'                   => 'module_name'],
+                        'key'                   => 'module_name'
+                    ],
                     ['value'                 => $request->module_name[$index]]
                 );
             }
             if ($request->description[$index] && $key != 'en') {
                 Translation::updateOrInsert(
-                    ['translationable_type' => 'App\Models\Module',
+                    [
+                        'translationable_type' => 'App\Models\Module',
                         'translationable_id' => $module->id,
                         'locale' => $key,
-                        'key' => 'description'],
+                        'key' => 'description'
+                    ],
                     ['value' => $request->description[$index]]
                 );
             }
@@ -187,8 +205,7 @@ class ModuleController extends Controller
     public function destroy($id)
     {
         $module = Module::withoutGlobalScope('translate')->findOrFail($id);
-        if($module->thumbnail)
-        {
+        if ($module->thumbnail) {
             if (Storage::disk('public')->exists('module/' . $module['thumbnail'])) {
                 Storage::disk('public')->delete('module/' . $module['thumbnail']);
             }
@@ -201,8 +218,7 @@ class ModuleController extends Controller
 
     public function status(Request $request)
     {
-        if(env('APP_MODE')=='demo' && in_array($request->id, [1,2,3,4,5]))
-        {
+        if (env('APP_MODE') == 'demo' && in_array($request->id, [1, 2, 3, 4, 5])) {
             Toastr::warning(translate('messages.you_can_not_edit_this_module_please_add_a_new_module_to_edit'));
             return back();
         }
@@ -215,6 +231,6 @@ class ModuleController extends Controller
 
     public function type(Request $request)
     {
-        return response()->json(['data'=>config('module.'.$request->module_type)]);
+        return response()->json(['data' => config('module.' . $request->module_type)]);
     }
 }
